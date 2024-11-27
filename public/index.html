@@ -32,14 +32,4 @@
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    document.getElementById('result').textContent = `Archivo guardado con éxito: ${result.url}`;
-                } else {
-                    document.getElementById('result').textContent = `Error: ${result.error}`;
-                }
-            } catch (error) {
-                document.getElementById('result').textContent = `Error: ${error.message}`;
-            }
-        });
-    </script>
-</body>
-</html>
+                    document.getElementById('result').textContent = `Archivo

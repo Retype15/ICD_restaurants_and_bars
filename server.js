@@ -1,19 +1,10 @@
 const express = require('express');
-const path = require('path');
 const { put } = require('@vercel/blob');
-
+const { URLSearchParams } = require('url');
 const app = express();
-app.use(express.json());
 
-const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
-
-// Servir archivos estáticos desde la carpeta 'public'
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Ruta de prueba para verificar que el servidor está funcionando
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.post('/save', async (req, res) => {
     const { filename, content } = req.body;
@@ -23,8 +14,11 @@ app.post('/save', async (req, res) => {
     }
 
     try {
-        const { url } = await put(filename, content, { access: 'public', token: blobToken });
-        res.status(200).json({ url });
+        const blob = await put(filename, content, {
+            access: 'public',
+            token: process.env.BLOB_READ_WRITE_TOKEN
+        });
+        res.status(200).json(blob);
     } catch (error) {
         res.status(500).json({ error: `Error saving file: ${error.message}` });
     }
