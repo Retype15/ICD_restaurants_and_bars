@@ -438,6 +438,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 				alert(`
 					<h3>Error</h3>
 					<p>${result.error}</p>
+					<p>$No response.ok</p>
 					`);
 			}
 		} catch (error) {
