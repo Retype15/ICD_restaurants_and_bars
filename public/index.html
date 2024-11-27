@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Texto al Blob Store</title>
+</head>
+<body>
+  <h1>Subir Texto al Blob Store</h1>
+  <form id="uploadForm">
+    <label for="nombre_archivo">Nombre del Archivo:</label><br>
+    <input type="text" id="nombre_archivo" name="nombre_archivo" required><br><br>
+
+    <label for="texto">Texto:</label><br>
+    <textarea id="texto" name="texto" rows="5" required></textarea><br><br>
+
+    <button type="submit">Subir</button>
+  </form>
+
+  <div id="responseMessage" style="margin-top: 20px;"></div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevenir el envío por defecto
+
+      const nombreArchivo = document.getElementById('nombre_archivo').value.trim();
+      const texto = document.getElementById('texto').value.trim();
+
+      if (!nombreArchivo || !texto) {
+        responseMessage.textContent = 'Por favor, completa todos los campos.';
+        responseMessage.style.color = 'red';
+        return;
+      }
+
+      try {
+        // Crear un archivo Blob con el texto ingresado
+        const fileBlob = new Blob([texto], { type: 'text/plain' });
+
+        // Enviar el archivo a la API
+        const response = await fetch(`/api/upload?filename=${encodeURIComponent(nombreArchivo)}`, {
+          method: 'POST',
+          body: fileBlob,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          responseMessage.innerHTML = `
+            <p style="color: green;">Archivo subido exitosamente.</p>
+            <p>URL del archivo: <a href="${result.url}" target="_blank">${result.url}</a></p>
+          `;
+        } else {
+          responseMessage.textContent = `Error: ${result.error}`;
+          responseMessage.style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error al enviar el archivo:', error);
+        responseMessage.textContent = 'Error al enviar el archivo al servidor.';
+        responseMessage.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>
