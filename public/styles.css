@@ -292,6 +292,42 @@ margin-top: 10px;
 background-color: #f8f9fa;
 }
 
+/* Estilos para la ventana de alerta */
+.alerta {
+    display: none; /* Inicialmente oculta */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.alerta-contenido {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+#alerta-boton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#alerta-boton:hover {
+    background-color: #c9302c;
+}
+
 @media (max-width: 768px) {
 .container {
 width: 90%;
