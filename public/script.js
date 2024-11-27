@@ -406,8 +406,8 @@ document.getElementById('localForm').addEventListener('submit', function(event) 
 	fileName = `${localName}.json`
 	
 	data{
-		archive_name: fileName,
-		json_text: localData
+		'archive_name': fileName,
+		'json_text': localData
 	};
 	  
 	try {
@@ -429,30 +429,30 @@ document.getElementById('localForm').addEventListener('submit', function(event) 
 		try {
 			const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
 			if (response.ok) {
-				responseDiv.innerHTML = `
+				alert(`
 					<h3>Éxito</h3>
 					<p>El archivo se ha subido correctamente.</p>
 					<p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
-				`;
+				`);
 			} else {
-				responseDiv.innerHTML = `
+				alert(`
 					<h3>Error</h3>
 					<p>${result.error}</p>
-					`;
+					`);
 			}
 		} catch (error) {
 			// Si la respuesta no es JSON válido, mostramos el texto para depuración
-			responseDiv.innerHTML = `
+			alert(`
 				<h3>Error al procesar la respuesta</h3>
 				<p>No se pudo analizar la respuesta como JSON.</p>
 				<p>Respuesta del servidor: ${textResponse}</p>
-			`;
+			`);
 		}
 	} catch (error) {
-		responseDiv.innerHTML = `
+		alert(`
 			<h3>Error</h3>
 			<p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
-		`;
+		`);
 	}
 });
 
