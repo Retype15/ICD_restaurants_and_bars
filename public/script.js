@@ -485,12 +485,21 @@ window.addEventListener('load', function() {
 });
 
 // Función para mostrar la alerta con un mensaje personalizado
-function mostrarAlerta(mensaje) {
-    const alerta = document.getElementById('alerta');
+// Función para mostrar la alerta
+function mostrarAlerta(texto) {
+    const alertaContainer = document.getElementById('alerta-container');
     const alertaTexto = document.getElementById('alerta-texto');
-    alertaTexto.textContent = mensaje;
-    alerta.style.display = 'flex'; // Muestra la alerta
+    const alertaBtn = document.getElementById('alerta-btn');
+
+    alertaTexto.innerHTML = texto; // Asigna el texto con HTML, por lo que los enlaces son funcionales
+    alertaContainer.style.display = 'flex';
+
+    // Evento para cerrar la alerta al hacer clic en el botón
+    alertaBtn.onclick = function() {
+        alertaContainer.style.display = 'none';
+    };
 }
+
 
 // Función para ocultar la alerta cuando se hace clic en el botón "Aceptar"
 document.getElementById('alerta-boton').addEventListener('click', function() {

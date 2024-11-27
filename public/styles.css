@@ -293,40 +293,49 @@ background-color: #f8f9fa;
 }
 
 /* Estilos para la ventana de alerta */
-.alerta {
-    display: none; /* Inicialmente oculta */
+.alerta-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* Inicialmente oculta */
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
-.alerta-contenido {
+.alerta {
     background-color: white;
+    border-radius: 8px;
     padding: 20px;
-    border-radius: 10px;
     text-align: center;
-    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
 }
 
-#alerta-boton {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #d9534f;
+.alerta p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+.alerta-btn {
+    background-color: #007bff;
     color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-#alerta-boton:hover {
-    background-color: #c9302c;
+.alerta-btn:hover {
+    background-color: #0056b3;
 }
+
 
 @media (max-width: 768px) {
 .container {
