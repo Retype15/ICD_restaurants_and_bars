@@ -1,9 +1,6 @@
 {
   "version": 2,
-  "public": {
-    "public": "public"
-  },
   "rewrites": [
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/", "destination": "/app/page.jsx" }
   ]
 }
