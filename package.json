@@ -1,10 +1,20 @@
 {
-  "name": "icd_restaurants_and_bars-app",
+  "name": "icd_restaurants_and_bars",
   "version": "1.0.0",
-  "description": "",
-  "type": "module",
+  "main": "index.js",
   "dependencies": {
-    "next": "^13.0.0",
-    "@vercel/blob": "^0.26.0"
+    "next": "*",
+    "react": "*",
+    "react-dom": "*",
+    "@vercel/blob": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
