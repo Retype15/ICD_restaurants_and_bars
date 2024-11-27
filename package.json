@@ -16,11 +16,10 @@
   },
   "engines": {
     "node": "18.x"
-  }
+  },
   "functions": {
-	"api/**/*.js": {
-	  "runtime": "nodejs18.x"
-	}
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
   }
-
 }
