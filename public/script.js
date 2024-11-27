@@ -332,7 +332,7 @@ document.getElementById('add_client').addEventListener('click', function() {
 });
 
 // Captura del formulario para crear el archivo JSON
-document.getElementById('localForm').addEventListener('submit', function(event) {
+document.getElementById('localForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const diasOperacion = Array.from(document.querySelectorAll('.dia.selected')).map(el => el.getAttribute('data-dia'));
@@ -405,7 +405,7 @@ document.getElementById('localForm').addEventListener('submit', function(event) 
 	localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
 	fileName = `${localName}.json`
 	
-	data{
+	const data = {
 		'archive_name': fileName,
 		'json_text': localData
 	};
