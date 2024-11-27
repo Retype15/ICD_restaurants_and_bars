@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir JSON al Blob Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    label {
+      font-size: 1rem;
+      margin: 10px 0 5px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .response {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Subir JSON al Blob Store</h1>
+
+  <form id="json-form">
+    <label for="archiveName">Nombre del archivo (archive_name):</label>
+    <input type="text" id="archiveName" name="archiveName" required>
+
+    <label for="jsonText">Texto JSON (json_text):</label>
+    <textarea id="jsonText" name="jsonText" rows="10" required></textarea>
+
+    <button type="submit">Enviar JSON</button>
+  </form>
+
+  <div class="response" id="response"></div>
+
+  <script>
+    // Obtenemos los elementos del formulario y la respuesta
+    const form = document.getElementById('json-form');
+    const responseDiv = document.getElementById('response');
+
+	form.addEventListener('submit', async (event) => {
+	  event.preventDefault();
+
+	  const archiveName = document.getElementById('archiveName').value;
+	  const jsonText = document.getElementById('jsonText').value;
+
+	  // Creamos el objeto de datos a enviar
+	  const data = {
+		archive_name: archiveName,
+		json_text: jsonText
+	  };
+
+	  try {
+		// Usamos window.location.origin para obtener la URL base
+		const apiUrl = `${window.location.origin}/api/save-json`;
+
+		// Enviamos los datos al servidor usando la URL base detectada
+		const response = await fetch(apiUrl, {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(data)
+		});
+
+		// Intentar leer la respuesta como JSON
+		const textResponse = await response.text(); // Leer la respuesta como texto
+
+		try {
+		  const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
+		  if (response.ok) {
+			responseDiv.innerHTML = `
+			  <h3>Éxito</h3>
+			  <p>El archivo se ha subido correctamente.</p>
+			  <p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
+			`;
+		  } else {
+			responseDiv.innerHTML = `
+			  <h3>Error</h3>
+			  <p>${result.error}</p>
+			`;
+		  }
+		} catch (error) {
+		  // Si la respuesta no es JSON válido, mostramos el texto para depuración
+		  responseDiv.innerHTML = `
+			<h3>Error al procesar la respuesta</h3>
+			<p>No se pudo analizar la respuesta como JSON.</p>
+			<p>Respuesta del servidor: ${textResponse}</p>
+		  `;
+		}
+	  } catch (error) {
+		responseDiv.innerHTML = `
+		  <h3>Error</h3>
+		  <p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
+		`;
+	  }
+	});
+
+  </script>
+
+</body>
+</html>
