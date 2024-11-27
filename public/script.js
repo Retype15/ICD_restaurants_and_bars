@@ -407,7 +407,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	
 	const data = {
 		'archive_name': fileName,
-		'json_text': localData
+		'json_text': JSON.stringify(localData)
 	};
 	  
 	try {
@@ -438,7 +438,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 				alert(`
 					<h3>Error</h3>
 					<p>${result.error}</p>
-					<p>$No response.ok</p>
+					<p>No response.ok</p>
 					`);
 			}
 		} catch (error) {
