@@ -33,3 +33,4 @@
                 const result = await response.json();
                 if (response.ok) {
                     document.getElementById('result').textContent = `Archivo
+			const { url } = await put('articles/blob.txt', 'Hello World!', { access: 'public' });
