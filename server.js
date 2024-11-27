@@ -5,7 +5,7 @@ const { put } = require('@vercel/blob');
 const app = express();
 app.use(express.json());
 
-const blobToken = process.env.BLOB;
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
 
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
