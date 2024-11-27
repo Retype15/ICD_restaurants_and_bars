@@ -3,34 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blob Storage</title>
+    <title>Subir a Blob Store</title>
 </head>
 <body>
-    <h1>Guardar en Blob Storage</h1>
-    <form id="blobForm">
-        <label for="filename">Nombre del archivo:</label>
-        <input type="text" id="filename" name="filename" required><br><br>
-        <label for="content">Contenido del archivo:</label><br>
-        <textarea id="content" name="content" rows="10" cols="30" required></textarea><br><br>
-        <button type="submit">Guardar</button>
+    <h1>Subir Datos a Blob Store</h1>
+    <form id="uploadForm">
+        <label for="nombre_archivo">Nombre del Archivo:</label><br>
+        <input type="text" id="nombre_archivo" name="nombre_archivo" required><br><br>
+
+        <label for="texto">Texto:</label><br>
+        <textarea id="texto" name="texto" rows="5" required></textarea><br><br>
+
+        <button type="submit">Subir</button>
     </form>
-    <p id="result"></p>
 
     <script>
-        document.getElementById('blobForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const filename = document.getElementById('filename').value;
-            const content = document.getElementById('content').value;
+        const form = document.getElementById("uploadForm");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const nombre_archivo = document.getElementById("nombre_archivo").value;
+            const texto = document.getElementById("texto").value;
 
             try {
-                const response = await fetch('/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ filename, content })
-                });
+				const response = await fetch("/api/upload", { // Se elimina localhost
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ nombre_archivo, texto })
+				});
+
                 const result = await response.json();
                 if (response.ok) {
-                    document.getElementById('result').textContent = `Archivo
-			const { url } = await put('articles/blob.txt', 'Hello World!', { access: 'public' });
+                    alert(result.message);
+                } else {
+                    alert("Error: " + result.error);
+                }
+            } catch (error) {
+                console.error("Error al enviar los datos:", error);
+                alert("Error al enviar los datos al servidor.");
+            }
+        });
+    </script>
+</body>
+</html>
