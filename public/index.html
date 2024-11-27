@@ -1,35 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blob Storage</title>
-</head>
-<body>
-    <h1>Guardar en Blob Storage</h1>
-    <form id="blobForm">
-        <label for="filename">Nombre del archivo:</label>
-        <input type="text" id="filename" name="filename" required><br><br>
-        <label for="content">Contenido del archivo:</label><br>
-        <textarea id="content" name="content" rows="10" cols="30" required></textarea><br><br>
+import { useState } from 'react';
+
+export default function Home() {
+  const [filename, setFilename] = useState('');
+  const [content, setContent] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    try {
+      const response = await fetch(`/api/blob?filename=${filename}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: content
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setMessage(`Archivo guardado con éxito: ${result.url}`);
+      } else {
+        setMessage(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Guardar en Blob Storage</h1>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Nombre del archivo:
+          <input type="text" value={filename} onChange={(e) => setFilename(e.target.value)} required />
+        </label>
+        <br />
+        <label>
+          Contenido del archivo:
+          <textarea value={content} onChange={(e) => setContent(e.target.value)} required />
+        </label>
+        <br />
         <button type="submit">Guardar</button>
-    </form>
-    <p id="result"></p>
-
-    <script>
-        document.getElementById('blobForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const filename = document.getElementById('filename').value;
-            const content = document.getElementById('content').value;
-
-            try {
-                const response = await fetch('/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ filename, content })
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    document.getElementById('result').textContent = `Archivo
+      </form>
+      {message && <p>{message}</p>}
+    </div>
+  );
+}

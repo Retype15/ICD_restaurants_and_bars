@@ -1,30 +1,29 @@
-const express = require('express');
-const { put } = require('@vercel/blob');
-const { URLSearchParams } = require('url');
-const app = express();
+import { put } from '@vercel/blob';
+import { NextResponse } from 'next/server';
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+export async function POST(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const filename = searchParams.get('filename');
 
-app.post('/save', async (req, res) => {
-    const { filename, content } = req.body;
-
-    if (!filename || !content) {
-        return res.status(400).json({ error: 'Filename and content are required' });
+    if (!filename || !request.body) {
+      return NextResponse.json({ error: 'Filename and content are required' }, { status: 400 });
     }
 
-    try {
-        const blob = await put(filename, content, {
-            access: 'public',
-            token: process.env.BLOB_READ_WRITE_TOKEN
-        });
-        res.status(200).json(blob);
-    } catch (error) {
-        res.status(500).json({ error: `Error saving file: ${error.message}` });
-    }
-});
+    // Guardar el archivo en Vercel Blob
+    const blob = await put(filename, request.body, {
+      access: 'public',
+    });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    return NextResponse.json({ message: 'File saved successfully', url: blob.url });
+  } catch (error) {
+    return NextResponse.json({ error: `Error saving file: ${error.message}` }, { status: 500 });
+  }
+}
+
+// Configuración necesaria para las rutas de la API en Pages
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
