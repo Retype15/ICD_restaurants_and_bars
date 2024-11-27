@@ -5,6 +5,6 @@
   "type": "module",
   "dependencies": {
     "next": "^13.0.0",
-    "@vercel/blob": "^1.0.0"
+    "@vercel/blob": "^0.26.0"
   }
 }
