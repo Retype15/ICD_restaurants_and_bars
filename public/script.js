@@ -499,7 +499,7 @@ function mostrarAlerta(texto) {
         alertaContainer.style.display = 'none';
     };
 }
-
+//mostrarAlerta('¡Alerta! <a href="https://www.ejemplo.com" target="_blank">Visita nuestra página</a> para más información.');
 
 // Función para ocultar la alerta cuando se hace clic en el botón "Aceptar"
 document.getElementById('alerta-boton').addEventListener('click', function() {
