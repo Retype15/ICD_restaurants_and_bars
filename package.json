@@ -1,0 +1,10 @@
+{
+  "name": "icd_restaurants_and_bars-app",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "next": "^13.0.0",
+    "@vercel/blob": "^1.0.0"
+  }
+}
