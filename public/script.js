@@ -429,13 +429,13 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		try {
 			const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
 			if (response.ok) {
-				mostrarAlerta(`
+				showAlert(`
 					<h3>Éxito</h3>
 					<p>El archivo se ha subido correctamente.</p>
 					<p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
 				`);
 			} else {
-				mostrarAlerta(`
+				showAlert(`
 					<h3>Error</h3>
 					<p>${result.error}</p>
 					<p>No response.ok</p>
@@ -443,14 +443,14 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 			}
 		} catch (error) {
 			// Si la respuesta no es JSON válido, mostramos el texto para depuración
-			mostrarAlerta(`
+			showAlert(`
 				<h3>Error al procesar la respuesta</h3>
 				<p>No se pudo analizar la respuesta como JSON.</p>
 				<p>Respuesta del servidor: ${textResponse}</p>
 			`);
 		}
 	} catch (error) {
-		mostrarAlerta(`
+		showAlert(`
 			<h3>Error</h3>
 			<p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
 		`);
@@ -486,7 +486,7 @@ window.addEventListener('load', function() {
 
 // Función para mostrar la alerta con un mensaje personalizado
 // Función para mostrar la alerta
-function mostrarAlerta(texto) {
+function showAlert(texto) {
     const alertaContainer = document.getElementById('alerta-container');
     const alertaTexto = document.getElementById('alerta-texto');
     const alertaBtn = document.getElementById('alerta-btn');
@@ -499,16 +499,13 @@ function mostrarAlerta(texto) {
         alertaContainer.style.display = 'none';
     };
 }
-//mostrarAlerta('¡Alerta! <a href="https://www.ejemplo.com" target="_blank">Visita nuestra página</a> para más información.');
-
-// Función para ocultar la alerta cuando se hace clic en el botón "Aceptar"
-document.getElementById('alerta-boton').addEventListener('click', function() {
-    const alerta = document.getElementById('alerta');
-    alerta.style.display = 'none'; // Oculta la alerta
-});
+//showAlert('¡Alerta! <a href="https://www.ejemplo.com" target="_blank">Visita nuestra página</a> para más información.');
 
 // Ejemplo de uso: Mostrar una alerta al cargar la página
 window.onload = function() {
-    mostrarAlerta("¡Bienvenido al formulario de restaurantes y bares!");
+    showAlert(`
+	<h3>¡Bienvenido al formulario de restaurantes y bares!<h3>
+	<p>Antes de hacer nada por favor registrese:</p>
+	`);
 };
 
