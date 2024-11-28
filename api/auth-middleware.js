@@ -1,20 +1,29 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'tu_secreto_seguro';
+const JWT_SECRET = 'mi_secreto_seguro'; // Debe coincidir con el definido en `validate-password.js`
 
-export function authMiddleware(req) {
-  const token = req.cookies.get('authToken');
+export async function middleware(request) {
+  // Leer la cookie del token
+  const token = request.cookies.get('authToken');
 
+  // Si no hay token, redirigir a la página de inicio de sesión
   if (!token) {
-    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Agregar el usuario al request
+    // Verificar el token JWT
+    jwt.verify(token, JWT_SECRET);
+
+    // Si el token es válido, permitir el acceso
     return NextResponse.next();
-  } catch (err) {
-    return NextResponse.json({ error: 'Token inválido o expirado' }, { status: 403 });
+  } catch (error) {
+    // Si el token no es válido o ha expirado, redirigir a la página de inicio de sesión
+    return NextResponse.redirect(new URL('/', request.url));
   }
 }
+
+export const config = {
+  matcher: ['/dashboard'], // Aplica este middleware solo a rutas específicas
+};
