@@ -1,7 +1,7 @@
 {
   "name": "icd_restaurants_and_bars",
   "version": "1.0.0",
-  "main": "dashboard.js",
+  "main": "dashboard",
   "dependencies": {
     "@vercel/blob": "^0.26.0",
     "bcryptjs": "^2.4.3",
