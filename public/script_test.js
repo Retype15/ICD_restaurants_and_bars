@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const response = await fetch('/api/validate-token', { method: 'GET' });
 
   if (response.ok) {
-    // Si el token es válido, redirige al Dashboard
     window.location.href = '/dashboard';
   }
 });
@@ -24,7 +23,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     message.textContent = 'Acceso concedido';
     message.style.color = 'green';
 
-    // Redirigir al Dashboard
     setTimeout(() => {
       window.location.href = '/dashboard';
     }, 1000);
