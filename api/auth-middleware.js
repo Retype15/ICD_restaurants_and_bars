@@ -19,5 +19,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/dashboard','index.html','index2.html'], // Aplica este middleware solo a rutas específicas
+  matcher: ['/dashboard'], // Aplica este middleware solo a rutas específicas
 };
