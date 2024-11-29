@@ -168,7 +168,7 @@
             </fieldset>
 			
 			<fieldset>
-				<legend>Ubicación</legend>
+				<legend> Ubicación</legend>
 				<div id="map" style="height: 400px; width: 100%;"></div><br>
 
 				<button type="button" id="obtener_ubicacion">Obtener mi ubicación</button><br><br>
@@ -192,12 +192,13 @@
 				<label for="pais">País:</label>
 				<input type="text" id="pais" name="pais" placeholder="Ej. País ABC"><br>
 
-				<input type="text" id="ubicacion" name="ubicacion" readonly placeholder="Coordenadas de ubicación"><br>
-			</fieldset>
+				<input type="text" id="ubicacion" name="ubicacion" readonly placeholder="Coordenadas de ubicación">
+			</fieldset><br>
 
-
-			<label for="name_person">Nombre del entrevistador(tu nombre):</label>
-            <input type="text" id="name_person" name="name_person" placeholder="Escribir solamente 'TEST' si solo estas probando..." required><br><br>
+			<fieldset>
+			<legend for="name_person">Nombre del entrevistador(tu nombre):</legend>
+            <input type="text" id="name_person" name="name_person" placeholder="Escribir solamente 'TEST' si solo estas probando..." required>
+			</fieldset><br><br>
             <button type="submit">Guardar Datos</button><br><br><br>
         </form>
     </div>

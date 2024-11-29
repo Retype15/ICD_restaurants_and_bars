@@ -42,8 +42,8 @@ width: 65%;
 margin: auto;
 overflow: hidden;
 padding: 20px;
-background: rgba(255, 255, 255, 0.9);
-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+background: rgba(255, 255, 255, 0.0);
+box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
 border-radius: 10px;
 margin-top: 50px;
 }
@@ -72,6 +72,9 @@ legend {
 padding: 0 10px;
 font-weight: bold;
 color: #333;
+padding: 8px;
+border-radius: 10px;
+background: #fff;
 }
 
 label {
