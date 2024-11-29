@@ -2,6 +2,29 @@
 let map;
 let marker;
 
+// Función para mostrar la alerta
+function showAlert(texto) {
+    const alertaContainer = document.getElementById('alerta-container');
+    const alertaTexto = document.getElementById('alerta-texto');
+    const alertaBtn = document.getElementById('alerta-btn');
+
+    alertaTexto.innerHTML = texto; // Asigna el texto con HTML, por lo que los enlaces son funcionales
+    alertaContainer.style.display = 'flex';
+
+    // Evento para cerrar la alerta al hacer clic en el botón
+    alertaBtn.onclick = function() {
+        alertaContainer.style.display = 'none';
+    };
+}
+
+// Ejemplo de uso: Mostrar una alerta al cargar la página
+window.onload = function() {
+    showAlert(`
+	<h3>¡Bienvenido al formulario de restaurantes y bares!<h3>
+	<p>Antes de hacer nada por favor registrese:</p>
+	`);
+};
+
 // Crear el mapa
 function initMap() {
     // Crear el mapa centrado en una ubicación inicial
@@ -401,12 +424,14 @@ document.getElementById('localForm').addEventListener('submit', async function(e
             coordenadas: document.getElementById('ubicacion').value // Coordenadas del mapa
         }
     };
-
+	
+	
+	personName = document.getElementById('name_person').value;
 	localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
 	fileName = `${localName}.json`
 	
 	const data = {
-		'archive_name': fileName,
+		'archive_name': `${personName}/{fileName}`,
 		'json_text': JSON.stringify(localData)
 	};
 	  
@@ -483,29 +508,4 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('load', function() {
     initMap();
 });
-
-// Función para mostrar la alerta con un mensaje personalizado
-// Función para mostrar la alerta
-function showAlert(texto) {
-    const alertaContainer = document.getElementById('alerta-container');
-    const alertaTexto = document.getElementById('alerta-texto');
-    const alertaBtn = document.getElementById('alerta-btn');
-
-    alertaTexto.innerHTML = texto; // Asigna el texto con HTML, por lo que los enlaces son funcionales
-    alertaContainer.style.display = 'flex';
-
-    // Evento para cerrar la alerta al hacer clic en el botón
-    alertaBtn.onclick = function() {
-        alertaContainer.style.display = 'none';
-    };
-}
-//showAlert('¡Alerta! <a href="https://www.ejemplo.com" target="_blank">Visita nuestra página</a> para más información.');
-
-// Ejemplo de uso: Mostrar una alerta al cargar la página
-window.onload = function() {
-    showAlert(`
-	<h3>¡Bienvenido al formulario de restaurantes y bares!<h3>
-	<p>Antes de hacer nada por favor registrese:</p>
-	`);
-};
 
