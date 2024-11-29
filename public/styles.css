@@ -1,20 +1,22 @@
 /* Estilos generales */
-body {
+body,html {
 font-family: 'Montserrat', sans-serif;
 background: linear-gradient(135deg, #ff7e5f 25%, #feb47b 25%, #feb47b 50%, #ff7e5f 50%, #ff7e5f 75%, #feb47b 55%, #feb47b 100%);
 background-size: 56.57px 56.57px;
 background-attachment: fixed;
 margin: 0;
 padding: 0;
+height: 100%;
 overflow: auto; /* Asegura que la página sea desplazable */
+overflow-x: hidden; /* Elimina el scroll horizontal */
 position: relative;
 color: #333;
 }
 
 .background-emojis {
 position: fixed;
-width: 100vw;
-height: 100vh;
+width: 100%;
+height: 100%;
 top: 0;
 left: 0;
 z-index: -1;
@@ -333,8 +335,8 @@ background-color: #f8f9fa;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: none; /* Inicialmente oculta */
     justify-content: center;
