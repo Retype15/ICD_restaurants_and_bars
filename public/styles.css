@@ -359,8 +359,10 @@ background-color: #f8f9fa;
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 80%;
+    max-width: 400px; /* Limita el ancho máximo */
+    width: calc(100% - 40px); /* Ajusta el ancho al tamaño del dispositivo con un margen */
+    box-sizing: border-box; /* Incluye el padding dentro del ancho total */
+    overflow-wrap: break-word; /* Permite romper las palabras largas */
 }
 
 .alerta p {
