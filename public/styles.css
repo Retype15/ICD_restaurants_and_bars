@@ -27,6 +27,7 @@ top: 0;
 left: 0;
 z-index: -1;
 pointer-events: none;
+overflow: hidden; /* Evita problemas de scroll */
 }
 
 .emoji {
@@ -94,6 +95,7 @@ background: rgba(255, 255, 255, 0.1);
 box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 border-radius: 10px;
 margin-top: 50px;
+box-sizing: border-box; /* Asegura que el padding no expanda el contenedor */
 }
 
 form {
@@ -348,6 +350,7 @@ background-color: #f8f9fa;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+	overflow: hidden; /* Evita scroll interno dentro del contenedor */
 }
 
 .alerta {
