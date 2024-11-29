@@ -21,7 +21,7 @@ function showAlert(texto) {
 window.onload = function() {
     showAlert(`
 	<h3>¡Bienvenido al formulario de restaurantes y bares!<h3>
-	<p>Antes de hacer nada por favor registrese:</p>
+	<p>Antes de hacer nada por favor denle una estrella al <a href="https://github.com/Retype15/ICD_restaurants_and_bars" target="_blank">Repositorio en GitHub</a>, se lo agradeceria mucho <3 :</p>
 	`);
 };
 
@@ -431,7 +431,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	fileName = `${localName}.json`
 	
 	const data = {
-		'archive_name': `${personName}/{fileName}`,
+		'archive_name': `${personName}/${fileName}`,
 		'json_text': JSON.stringify(localData)
 	};
 	  
