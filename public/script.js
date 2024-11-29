@@ -8,12 +8,30 @@ function showAlert(texto) {
     const alertaTexto = document.getElementById('alerta-texto');
     const alertaBtn = document.getElementById('alerta-btn');
 
-    alertaTexto.innerHTML = texto; // Asigna el texto con HTML, por lo que los enlaces son funcionales
+    // Asigna el texto con HTML para enlaces funcionales
+    alertaTexto.innerHTML = texto;
+
+    // Quita cualquier clase de salida previa y aplica la clase de entrada
+    alertaTexto.classList.remove('fade-out');
+    alertaTexto.classList.add('fade-in');
+    alertaBtn.classList.remove('fade-out');
+    alertaBtn.classList.add('fade-in');
+
+    // Muestra el contenedor
     alertaContainer.style.display = 'flex';
 
     // Evento para cerrar la alerta al hacer clic en el botón
-    alertaBtn.onclick = function() {
-        alertaContainer.style.display = 'none';
+    alertaBtn.onclick = function () {
+        // Añade la clase de salida (fadeOut)
+        alertaTexto.classList.remove('fade-in');
+        alertaTexto.classList.add('fade-out');
+        alertaBtn.classList.remove('fade-in');
+        alertaBtn.classList.add('fade-out');
+
+        // Oculta el contenedor después de la animación de salida
+        setTimeout(() => {
+            alertaContainer.style.display = 'none';
+        }, 500); // Duración del fadeOut (coincide con la animación CSS)
     };
 }
 
