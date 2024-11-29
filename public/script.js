@@ -27,6 +27,8 @@ function showAlert(texto) {
         alertaTexto.classList.add('fade-out');
         alertaBtn.classList.remove('fade-in');
         alertaBtn.classList.add('fade-out');
+		
+		alertaContainer.style.display = 'flex';
 
         // Oculta el contenedor después de la animación de salida
         setTimeout(() => {
