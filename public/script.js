@@ -282,13 +282,21 @@ document.getElementById('add_producto').addEventListener('click', function() {
         </div>
         <div class="producto-body">
             <label for="producto_nombre">Nombre del Producto:</label>
-            <input type="text" name="producto_nombre" required>
+            <input type="text" name="producto_nombre" placeholder="Nombre comun del producto aquí..." required>
 
             <label for="producto_precio">Precio:</label>
-            <input type="number" name="producto_precio" required>
-
-            <label for="producto_pedidos">Cantidad de Pedidos Promedio:</label>
-            <input type="number" name="producto_pedidos" required>
+            <input type="number" name="producto_precio" placeholder="Precio aquí..." required>
+			
+            <label for="tipo_plato">Tipo de plato:</label>
+                <select id="tipo_plato" name="tipo_plato" required>
+					<option value="" disabled selected>Seleccione una opción</option>
+                    <option value="entrante">Entrante</option>
+                    <option value="principal">Plato principal</option>
+                    <option value="acompanante">Acompañante</option>
+                    <option value="postre">Postre</option>
+                    <option value="bebida">Bebida</option>
+                    <option value="otro">Otro</option>
+                </select><br>			
         </div>
     `;
     document.getElementById('menu_container').appendChild(productoContainer);
@@ -389,7 +397,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		id: producto.getAttribute('data-id'),
         nombre: producto.querySelector('[name="producto_nombre"]').value,
         precio: parseFloat(producto.querySelector('[name="producto_precio"]').value),
-        pedidos_promedio: parseInt(producto.querySelector('[name="producto_pedidos"]').value)
+        tipo: producto.querySelector('[name="tipo_plato"]').value
     }));
 	
 	// Guardar Datos de los clientes
@@ -412,6 +420,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
         correo_electronico: document.getElementById('correo').value,
         pagina_web: document.getElementById('pagina_web').value,
         tipo_establecimiento: document.getElementById('tipo_establecimiento').value,
+        tipo_negocio: document.getElementById('tipo_negocio').value,
 		tipo_cocina: document.getElementById('tipo_cocina').value,
         horario: {
             apertura: document.getElementById('horario_apertura').value,
