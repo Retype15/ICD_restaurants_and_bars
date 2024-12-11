@@ -8,25 +8,58 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #007BFF;
     }
     .file-list {
       margin-top: 20px;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
     .file-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .file-item:last-child {
+      border-bottom: none;
     }
     .file-item button {
-      margin-left: 10px;
+      padding: 5px 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .file-item button:hover {
+      background-color: #0056b3;
+    }
+    .error-message {
+      text-align: center;
+      color: red;
+    }
+    .no-files {
+      text-align: center;
+      color: #555;
     }
   </style>
 </head>
 <body>
   <h1>Download Files</h1>
   <div class="file-list" id="file-list">
-    <p>Loading files...</p>
+    <p class="no-files">Loading files...</p>
   </div>
 
   <script>
@@ -35,14 +68,14 @@
       try {
         const response = await fetch('/api/files'); // Endpoint para obtener los archivos disponibles
         if (!response.ok) {
-          throw new Error('Failed to fetch files');
+          throw new Error(`Failed to fetch files: ${response.statusText}`);
         }
 
         const files = await response.json();
         renderFileList(files);
       } catch (error) {
         console.error(error);
-        document.getElementById('file-list').innerHTML = '<p>Error loading files.</p>';
+        document.getElementById('file-list').innerHTML = '<p class="error-message">Error loading files. Please try again later.</p>';
       }
     }
 
@@ -52,7 +85,7 @@
       fileListElement.innerHTML = '';
 
       if (files.length === 0) {
-        fileListElement.innerHTML = '<p>No files available for download.</p>';
+        fileListElement.innerHTML = '<p class="no-files">No files available for download.</p>';
         return;
       }
 
