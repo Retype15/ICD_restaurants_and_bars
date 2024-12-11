@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Archivo e Imagen</title>
+</head>
+<body>
+  <h1>Subir texto e imagen</h1>
+  <form id="uploadForm">
+    <!-- Entrada de texto -->
+    <label for="textInput">Escribe el contenido del archivo:</label><br>
+    <textarea id="textInput" rows="5" cols="30" required></textarea><br><br>
+
+    <!-- Subida o captura de imagen -->
+    <label for="imageInput">Selecciona una imagen o toma una foto:</label><br>
+    <input type="file" id="imageInput" accept="image/*" required><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="responseMessage"></p>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevenir recarga de la página
+
+      const textInput = document.getElementById('textInput').value.trim();
+      const imageInput = document.getElementById('imageInput').files[0];
+
+      if (!textInput || !imageInput) {
+        responseMessage.textContent = 'Por favor, completa ambos campos.';
+        return;
+      }
+
+      // Crear un nombre base para ambos archivos
+      const archiveName = `archivo-${Date.now()}`;
+
+      // Crear datos para enviar el archivo de texto
+      const textPayload = JSON.stringify({ 
+        json_text: textInput, 
+        archive_name: `${archiveName}.txt` 
+      });
+
+      try {
+        // Subir el archivo de texto al servidor
+        const textResponse = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: textPayload,
+        });
+
+        if (!textResponse.ok) throw new Error('Error al subir el archivo de texto.');
+
+        const textResult = await textResponse.json();
+
+        // Subir la imagen al servidor
+        const formData = new FormData();
+        formData.append('image', imageInput);
+        formData.append('archive_name', `${archiveName}.png`); // Cambiar extensión según el formato deseado
+
+        const imageResponse = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!imageResponse.ok) throw new Error('Error al subir la imagen.');
+
+        const imageResult = await imageResponse.json();
+
+        responseMessage.textContent = `¡Archivos subidos con éxito!`;
+        console.log('Texto:', textResult, 'Imagen:', imageResult);
+
+      } catch (error) {
+        responseMessage.textContent = 'Ocurrió un error al subir los archivos.';
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
