@@ -20,12 +20,8 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true, blob });
   } catch (error) {
-    console.error('Error al procesar el archivo de texto:', error); // Log detallado
     return NextResponse.json(
-      {
-        error: 'Error al subir el archivo de texto',
-        details: error.message || 'Sin detalles adicionales',
-      },
+      { error: 'An error occurred while processing the request' },
       { status: 500 }
     );
   }
