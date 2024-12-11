@@ -511,6 +511,99 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	}
 });
 
+// Cargar Leaflet.js al finalizar la carga de la página
+window.addEventListener('load', function() {
+    initMap();
+});
+
+// LOGICA DE LAS IMAGENES!
+document.addEventListener('DOMContentLoaded', () => {
+	const imageInput = document.getElementById('imageInput');
+	const selectImagesButton = document.getElementById('selectImagesButton');
+	const previewContainer = document.getElementById('previewContainer');
+	const imageModal = document.getElementById('imageModal');
+	const modalImage = document.getElementById('modalImage');
+	const closeModalButton = document.getElementById('closeModalButton');
+
+	// Almacena las imágenes seleccionadas
+	const selectedImages = [];
+
+	// Botón personalizado para abrir el selector de archivos o la cámara
+	selectImagesButton.addEventListener('click', () => {
+		imageInput.click();
+	});
+
+	// Agregar nuevas imágenes seleccionadas al listado
+	imageInput.addEventListener('change', (event) => {
+		Array.from(event.target.files).forEach((file) => {
+			addImage(file);
+		});
+	});
+
+	// Función para agregar una imagen al contenedor de previsualización
+	function addImage(file) {
+		if (!file || selectedImages.find((img) => img.name === file.name)) return;
+
+		selectedImages.push(file);
+		const imageUrl = URL.createObjectURL(file);
+
+		const previewDiv = document.createElement('div');
+		previewDiv.classList.add('image-preview');
+		previewDiv.style.position = 'relative';
+
+		const img = document.createElement('img');
+		img.src = imageUrl;
+		img.alt = file.name;
+		img.style.cursor = 'pointer';
+		img.style.width = '120px';
+		img.style.height = 'auto';
+		img.style.border = '1px solid #ddd';
+		img.style.borderRadius = '10px';
+	
+		const fileInfo = document.createElement('p');
+		fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+		fileInfo.style.fontSize = '12px';
+		fileInfo.style.marginTop = '5px';
+		fileInfo.style.textAlign = 'center';
+
+		const removeButton = document.createElement('button');
+		removeButton.textContent = 'X';
+		removeButton.style = `
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			background: red;
+			color: white;
+			border: none;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			cursor: pointer;
+		`;
+
+		removeButton.addEventListener('click', () => {
+			selectedImages.splice(selectedImages.indexOf(file), 1);
+			previewDiv.remove();
+		});
+
+		img.addEventListener('click', () => {
+			modalImage.src = imageUrl;
+			imageModal.style.display = 'flex';
+		});
+
+		previewDiv.appendChild(img);
+		previewDiv.appendChild(fileInfo);
+		previewDiv.appendChild(removeButton);
+		previewContainer.appendChild(previewDiv);
+	}
+
+  // Cerrar el modal de previsualización
+	closeModalButton.addEventListener('click', () => {
+		imageModal.style.display = 'none';
+	});
+});
+
+// TERMINA AQUI LA LOGICA DE LAS IMAGENES
 
 // Aleatorización de emojis después de cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
@@ -532,9 +625,3 @@ document.addEventListener('DOMContentLoaded', () => {
         emoji.style.animationDuration = randomDuration + 's';
     });
 });
-
-// Cargar Leaflet.js al finalizar la carga de la página
-window.addEventListener('load', function() {
-    initMap();
-});
-

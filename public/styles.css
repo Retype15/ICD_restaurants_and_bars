@@ -428,3 +428,23 @@ background-color: #f8f9fa;
 width: 90%;
 }
 }
+
+.image-preview {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 120px;
+    text-align: center;
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-preview p {
+    font-size: 12px;
+    color: #555;
+    margin: 5px 0;
+}
