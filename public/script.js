@@ -382,42 +382,6 @@ document.getElementById('add_client').addEventListener('click', function() {
     actualizarOpcionesClientes();
 });
 
-async function sendImagesToSaveImage(imageInput, path) {
-    if (!path) {
-        throw new Error('Se requiere una ruta válida para guardar las imágenes.');
-    }
-
-    const formData = new FormData();
-    formData.append('path', path);
-
-    const files = imageInput instanceof HTMLInputElement ? imageInput.files : imageInput;
-
-    Array.from(files).forEach((file, index) => {
-        const imageKey = `image_${index + 1}`;
-        formData.append(imageKey, file, file.name);
-    });
-
-    try {
-        const apiUrl = `${window.location.origin}/api/save-image`;
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`Error del servidor: ${errorMessage}`);
-        }
-
-        const result = await response.json();
-        console.log('Imágenes subidas con éxito:', result.uploadedImages);
-        alert('Las imágenes se subieron correctamente.');
-    } catch (error) {
-        console.error('Error al subir las imágenes:', error);
-        alert(`Hubo un problema al subir las imágenes: ${error.message}`);
-    }
-}
-
 
 // Captura del formulario para crear el archivo JSON
 document.getElementById('localForm').addEventListener('submit', async function(event) {
@@ -525,7 +489,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		if (allImages.length === 0) {
 			showAlert('No hay imágenes para subir.');
 		} else {
-			sendImagesToSaveImage(fileList.files, `${personName}/${fileName}`);
+			sendImagesToSaveImage(fileList.files, `${personName}/${localName}`);
 		}
 
 			// Intentar leer la respuesta como JSON
@@ -562,6 +526,41 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	}
 });
 
+async function sendImagesToSaveImage(imageInput, path) {
+    if (!path) {
+        throw new Error('Se requiere una ruta válida para guardar las imágenes.');
+    }
+
+    const formData = new FormData();
+    formData.append('path', path);
+
+    const files = imageInput instanceof HTMLInputElement ? imageInput.files : imageInput;
+
+    Array.from(files).forEach((file, index) => {
+        const imageKey = `image_${index + 1}`;
+        formData.append(imageKey, file, file.name);
+    });
+
+    try {
+        const apiUrl = `${window.location.origin}/api/save-image`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Error del servidor: ${errorMessage}`);
+        }
+
+        const result = await response.json();
+        console.log('Imágenes subidas con éxito:', result.uploadedImages);
+        alert('Las imágenes se subieron correctamente.');
+    } catch (error) {
+        console.error('Error al subir las imágenes:', error);
+        alert(`Hubo un problema al subir las imágenes: ${error.message}`);
+    }
+}
 
 // Cargar Leaflet.js al finalizar la carga de la página
 window.addEventListener('load', function() {

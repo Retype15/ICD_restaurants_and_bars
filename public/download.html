@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Files</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .file-list {
+      margin-top: 20px;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .file-item button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Download Files</h1>
+  <div class="file-list" id="file-list">
+    <p>Loading files...</p>
+  </div>
+
+  <script>
+    // Fetch the list of files from the server
+    async function fetchFiles() {
+      try {
+        const response = await fetch('/api/files'); // Endpoint para obtener los archivos disponibles
+        if (!response.ok) {
+          throw new Error('Failed to fetch files');
+        }
+
+        const files = await response.json();
+        renderFileList(files);
+      } catch (error) {
+        console.error(error);
+        document.getElementById('file-list').innerHTML = '<p>Error loading files.</p>';
+      }
+    }
+
+    // Render the file list
+    function renderFileList(files) {
+      const fileListElement = document.getElementById('file-list');
+      fileListElement.innerHTML = '';
+
+      if (files.length === 0) {
+        fileListElement.innerHTML = '<p>No files available for download.</p>';
+        return;
+      }
+
+      files.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+
+        const fileName = document.createElement('span');
+        fileName.textContent = file.name;
+
+        const downloadButton = document.createElement('button');
+        downloadButton.textContent = 'Download';
+        downloadButton.onclick = () => downloadFile(file.url);
+
+        fileItem.appendChild(fileName);
+        fileItem.appendChild(downloadButton);
+
+        fileListElement.appendChild(fileItem);
+      });
+    }
+
+    // Download a file
+    function downloadFile(url) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Initialize
+    fetchFiles();
+  </script>
+</body>
+</html>
