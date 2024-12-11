@@ -28,7 +28,7 @@ export async function POST(request) {
 
       // Crear un nombre de archivo único con el formato "nombre_#.ext"
       const extension = file.name.split('.').pop(); // Extraer la extensión del archivo
-      const fileName = `${savePath}/nombre_${counter}.${extension}`;
+      const fileName = `${savePath}_${counter}.${extension}`;
 
       // Leer el contenido del archivo como ArrayBuffer
       const arrayBuffer = await file.arrayBuffer();
