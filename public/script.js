@@ -476,6 +476,14 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 			},
 			body: JSON.stringify(data)
 		});
+		
+		// Ejemplo de uso
+		// Obtén las imágenes desde un input file o cualquier otra fuente
+		const inputElement = document.getElementById("imageInput");
+		const images = Array.from(inputElement.files); // Suponiendo que es un <input type="file" multiple />
+
+		// Llamar a la función con las imágenes seleccionadas
+		sendImagesToSaveImage(images);
 
 		// Intentar leer la respuesta como JSON
 		const textResponse = await response.text(); // Leer la respuesta como texto
@@ -510,6 +518,46 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		`);
 	}
 });
+
+async function sendImagesToSaveImage(images) {
+    // Verifica que hay imágenes válidas
+    if (!images || images.length === 0) {
+        console.error("No hay imágenes para enviar.");
+        return;
+    }
+
+    try {
+        // Crear el objeto FormData
+        const formData = new FormData();
+
+        // Agregar cada imagen al FormData
+        images.forEach((image, index) => {
+            if (image instanceof File || image instanceof Blob) {
+                const imageName = `image_${index + 1}_${image.name}`;
+                formData.append(`image_${index + 1}`, image, imageName);
+            } else {
+                console.warn(`La entrada en el índice ${index} no es un archivo válido.`);
+            }
+        });
+
+        // Realizar la solicitud POST al endpoint save-image
+        const response = await fetch('/api/save-image', {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Manejo de la respuesta
+        const result = await response.json();
+        if (response.ok) {
+            console.log("Imágenes enviadas exitosamente:", result.uploadedImages);
+        } else {
+            console.error("Error al enviar las imágenes:", result.error);
+        }
+    } catch (error) {
+        console.error("Error al enviar imágenes:", error);
+    }
+}
+
 
 // Cargar Leaflet.js al finalizar la carga de la página
 window.addEventListener('load', function() {
