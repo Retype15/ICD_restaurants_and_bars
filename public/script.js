@@ -483,7 +483,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		const images = Array.from(inputElement.files); // Suponiendo que es un <input type="file" multiple />
 
 		// Llamar a la función con las imágenes seleccionadas
-		sendImagesToSaveImage(images);
+		sendImagesToSaveImage(inputElement);
 
 		// Intentar leer la respuesta como JSON
 		const textResponse = await response.text(); // Leer la respuesta como texto
@@ -541,7 +541,7 @@ async function sendImagesToSaveImage(images) {
         });
 
         // Realizar la solicitud POST al endpoint save-image
-        const response = await fetch('/api/save-image', {
+        const response = await fetch('${window.location.origin}/api/save-image', {
             method: 'POST',
             body: formData,
         });
@@ -555,6 +555,7 @@ async function sendImagesToSaveImage(images) {
         }
     } catch (error) {
         console.error("Error al enviar imágenes:", error);
+		showAlert("Error al enviar imágenes:\n" + error)
     }
 }
 
