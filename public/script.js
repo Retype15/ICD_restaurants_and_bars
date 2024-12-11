@@ -479,13 +479,17 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		
 		// Ejemplo de uso
 		// Obtén las imágenes desde un input file o cualquier otra fuente
-		const inputElement = document.getElementById("imageInput");
-		const images = Array.from(inputElement.files); // Suponiendo que es un <input type="file" multiple />
+		try{
+			const inputElement = document.getElementById("imageInput");
+			const images = Array.from(inputElement.files); // Suponiendo que es un <input type="file" multiple />
+	
+			// Llamar a la función con las imágenes seleccionadas
+			sendImagesToSaveImage(inputElement);
+		} catch (error){
+			showAlert(error)
+		}
 
-		// Llamar a la función con las imágenes seleccionadas
-		sendImagesToSaveImage(inputElement);
-
-		// Intentar leer la respuesta como JSON
+			// Intentar leer la respuesta como JSON
 		const textResponse = await response.text(); // Leer la respuesta como texto
 
 		try {
@@ -541,7 +545,7 @@ async function sendImagesToSaveImage(images) {
         });
 
         // Realizar la solicitud POST al endpoint save-image
-        const response = await fetch('${window.location.origin}/api/save-image', {
+        const response = await fetch(`${window.location.origin}/api/save-json`, {
             method: 'POST',
             body: formData,
         });
