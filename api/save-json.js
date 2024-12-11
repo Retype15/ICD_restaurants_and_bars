@@ -3,29 +3,29 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const formData = await request.formData();
-    const imageFile = formData.get('image');
-    const archiveName = formData.get('archive_name');
+    const body = await request.json(); // Leer el JSON enviado
+    const { json_text, archive_name } = body;
 
-    if (!imageFile || !archiveName) {
+    if (!json_text || !archive_name) {
       return NextResponse.json(
-        { error: 'Missing image or archive_name in request body' },
+        { error: 'Missing json_text or archive_name in request body' },
         { status: 400 }
       );
     }
 
-    // Leer el contenido del archivo de imagen
-    const arrayBuffer = await imageFile.arrayBuffer();
-
-    // Subir la imagen al Blob Store
-    const blob = await put(archiveName, Buffer.from(arrayBuffer), {
+    // Subir el contenido como un archivo al Blob Store
+    const blob = await put(archive_name, json_text, {
       access: 'public',
     });
 
     return NextResponse.json({ success: true, blob });
   } catch (error) {
+    console.error('Error al procesar el archivo de texto:', error); // Log detallado
     return NextResponse.json(
-      { error: 'An error occurred while processing the image upload' },
+      {
+        error: 'Error al subir el archivo de texto',
+        details: error.message || 'Sin detalles adicionales',
+      },
       { status: 500 }
     );
   }

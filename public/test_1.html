@@ -47,7 +47,7 @@
 
       try {
         // Subir el archivo de texto al servidor
-        const textResponse = await fetch('/api/upload', {
+        const textResponse = await fetch('/api/save-json', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: textPayload,
@@ -62,7 +62,7 @@
         formData.append('image', imageInput);
         formData.append('archive_name', `${archiveName}.png`); // Cambiar extensión según el formato deseado
 
-        const imageResponse = await fetch('/api/upload-image', {
+        const imageResponse = await fetch('/api/save-image', {
           method: 'POST',
           body: formData,
         });
