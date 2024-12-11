@@ -3,57 +3,72 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const formData = await request.formData(); // Parsear el FormData recibido
-    const uploadedImages = [];
+    // Parsear los datos del formulario
+    const formData = await request.formData();
 
-    for (const [key, file] of formData.entries()) {
-      // Verificar que el archivo es una instancia de Blob
-      if (file instanceof Blob) {
-        if (!file.name || file.size === 0) {
-          console.error(`Archivo inválido: ${file.name || 'Sin nombre'} (${file.size} bytes)`);
-          continue; // Ignorar archivos vacíos o sin nombre
-        }
-
-        // Leer el contenido del archivo como ArrayBuffer
-        const arrayBuffer = await file.arrayBuffer();
-
-        // Subir la imagen al Blob Storage de Vercel
-        const blob = await put(file.name, Buffer.from(arrayBuffer), {
-          access: 'public',
-        });
-
-        // Agregar la información subida a la lista
-        uploadedImages.push({
-          key,
-          originalName: file.name,
-          size: file.size,
-          url: blob.url, // URL pública del archivo subido
-        });
-      } else {
-        console.warn(`Se ignoró la entrada "${key}" porque no es un archivo válido.`);
-      }
-    }
-
-    // Validar si se subieron archivos
-    if (uploadedImages.length === 0) {
+    // Obtener la ruta del formulario
+    const savePath = formData.get('path');
+    if (!savePath) {
       return NextResponse.json(
-        { error: 'No se subió ningún archivo válido' },
+        { error: 'No se proporcionó la ruta donde guardar las imágenes.' },
         { status: 400 }
       );
     }
 
-    // Respuesta de éxito con la información de los archivos subidos
+    const uploadedImages = [];
+    let counter = 1; // Contador para los nombres de las imágenes
+
+    for (const entry of formData.entries()) {
+      const [key, file] = entry;
+
+      // Ignorar el campo "path" y asegurarse de que la entrada sea una imagen válida
+      if (key === 'path' || !(file instanceof Blob)) {
+        continue;
+      }
+
+      // Crear un nombre de archivo único con el formato "nombre_#.ext"
+      const extension = file.name.split('.').pop(); // Extraer la extensión del archivo
+      const fileName = `${savePath}/nombre_${counter}.${extension}`;
+
+      // Leer el contenido del archivo como ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+
+      // Subir el archivo al Blob Storage de Vercel
+      const blob = await put(fileName, Buffer.from(arrayBuffer), {
+        access: 'public',
+      });
+
+      // Guardar la información de la imagen subida
+      uploadedImages.push({
+        key,
+        originalName: file.name,
+        savedName: fileName,
+        size: file.size,
+        url: blob.url, // URL pública del archivo subido
+      });
+
+      counter++; // Incrementar el contador para el siguiente archivo
+    }
+
+    // Validar si se subieron imágenes
+    if (uploadedImages.length === 0) {
+      return NextResponse.json(
+        { error: 'No se subió ninguna imagen válida.' },
+        { status: 400 }
+      );
+    }
+
+    // Responder con éxito y lista de imágenes subidas
     return NextResponse.json({ success: true, uploadedImages });
   } catch (error) {
     // Manejo de errores con detalles claros
     console.error('Error al procesar las imágenes:', error);
     return NextResponse.json(
       {
-        error: 'Error al procesar las imágenes',
-        details: error.message || 'No se pudo obtener más detalles',
+        error: 'Error al subir las imágenes.',
+        details: error.message || 'No se pudo obtener más detalles.',
       },
       { status: 500 }
     );
   }
 }
-

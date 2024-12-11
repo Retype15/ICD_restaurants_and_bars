@@ -480,11 +480,13 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		// Ejemplo de uso
 		// Obtén las imágenes desde un input file o cualquier otra fuente
 		try{
-			const inputElement = document.getElementById("imageInput");
-			const images = Array.from(inputElement.files); // Suponiendo que es un <input type="file" multiple />
+			const selectedImages = document.getElementById('selectImagesInput').files;
+			const capturedPhotos = document.getElementById('capturePhotoInput').files;
+			const allImages = [...selectedImages, ...capturedPhotos];
 	
 			// Llamar a la función con las imágenes seleccionadas
-			sendImagesToSaveImage(inputElement);
+			sendImagesToSaveImage(allImages, `${personName}/${fileName}`);
+			
 		} catch (error){
 			showAlert(error)
 		}
@@ -523,45 +525,38 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	}
 });
 
-async function sendImagesToSaveImage(images) {
-    // Verifica que hay imágenes válidas
-    if (!images || images.length === 0) {
-        console.error("No hay imágenes para enviar.");
-        return;
-    }
+async function sendImagesToSaveImage(imageInput , path) {
+	const formData = new FormData();
+	formData.append('path', path);
 
-    try {
-        // Crear el objeto FormData
-        const formData = new FormData();
+	Array.from(imageInput.files).forEach((file, index) => {
+		const imageKey = `image_${index + 1}`; // Llave única para cada imagen
+		formData.append(imageKey, file, file.name);
+	});
 
-        // Agregar cada imagen al FormData
-        images.forEach((image, index) => {
-            if (image instanceof File || image instanceof Blob) {
-                const imageName = `image_${index + 1}_${image.name}`;
-                formData.append(`image_${index + 1}`, image, imageName);
-            } else {
-                console.warn(`La entrada en el índice ${index} no es un archivo válido.`);
-            }
-        });
+	try {
+		const apiUrl = `${window.location.origin}/api/save-image`; // URL del endpoint del servidor
 
-        // Realizar la solicitud POST al endpoint save-image
-        const response = await fetch(`${window.location.origin}/api/save-json`, {
-            method: 'POST',
-            body: formData,
-        });
+		// Enviar las imágenes al servidor con fetch
+		const response = await fetch(apiUrl, {
+			method: 'POST',
+			body: formData,
+		});
 
-        // Manejo de la respuesta
-        const result = await response.json();
-        if (response.ok) {
-            console.log("Imágenes enviadas exitosamente:", result.uploadedImages);
-        } else {
-            console.error("Error al enviar las imágenes:", result.error);
-        }
-    } catch (error) {
-        console.error("Error al enviar imágenes:", error);
-		showAlert("Error al enviar imágenes:\n" + error)
-    }
-}
+		const result = await response.json(); // Leer la respuesta del servidor
+
+		if (response.ok) {
+			console.log('Imágenes subidas con éxito:', result.uploadedImages);
+			alert('Las imágenes se subieron correctamente.');
+		} else {
+			console.error('Error al subir imágenes:', result.error);
+			alert(`Error al subir las imágenes: ${result.error}`);
+		}
+	} catch (error) {
+		console.error('Error al conectar con el servidor:', error);
+		alert('Hubo un problema al subir las imágenes.');
+	}
+});
 
 
 // Cargar Leaflet.js al finalizar la carga de la página
