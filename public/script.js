@@ -386,221 +386,241 @@ document.getElementById('add_client').addEventListener('click', function() {
 document.getElementById('localForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
+    // Recoger datos seleccionados
     const diasOperacion = Array.from(document.querySelectorAll('.dia.selected')).map(el => el.getAttribute('data-dia'));
     const metodosPago = Array.from(document.querySelectorAll('.metodo.selected')).map(el => el.getAttribute('data-metodo'));
     const opcionesEntrega = Array.from(document.querySelectorAll('.entrega.selected')).map(el => el.getAttribute('data-entrega'));
     const opcionesReserva = Array.from(document.querySelectorAll('.reserva.selected')).map(el => el.getAttribute('data-reserva'));
     const opcionesAmenidad = Array.from(document.querySelectorAll('.amenidad.selected')).map(el => el.getAttribute('data-amenidad'));
-	
-	// Guardar los datos de los productos
+    
+    // Guardar los datos de los productos
     const productos = Array.from(document.querySelectorAll('.producto')).map(producto => ({
-		id: producto.getAttribute('data-id'),
+        id: producto.getAttribute('data-id'),
         nombre: producto.querySelector('[name="producto_nombre"]').value,
         precio: parseFloat(producto.querySelector('[name="producto_precio"]').value),
         tipo: producto.querySelector('[name="tipo_plato"]').value
     }));
-	
-	// Guardar Datos de los clientes
+
+    // Guardar Datos de los clientes
     const clients = Array.from(document.querySelectorAll('.client')).map(client => ({
         nombre: client.querySelector('[name="client_nombre"]').value,
-		edad: parseInt(client.querySelector('[name="client_edad"]').value),
-		genero: client.querySelector('[name="client_genero"]').value,
-		frec_visitas: client.querySelector('[name="client_frec_visitas"]').value,
-		pref_alimentaria: client.querySelector('[name="client_pref_alim"]').value,
-		gasto: parseInt(client.querySelector('[name="client_gasto"]').value),
-		client_preferences: parseInt(client.querySelector('[name="client_preferences"]').value),
-		general_calif: parseInt(client.querySelector('[name="client_general_calif"]').value),
-		recomendado: parseInt(client.querySelector('[name="client_recomendado"]').value)
+        edad: parseInt(client.querySelector('[name="client_edad"]').value),
+        genero: client.querySelector('[name="client_genero"]').value,
+        frec_visitas: client.querySelector('[name="client_frec_visitas"]').value,
+        pref_alimentaria: client.querySelector('[name="client_pref_alim"]').value,
+        gasto: parseInt(client.querySelector('[name="client_gasto"]').value),
+        client_preferences: parseInt(client.querySelector('[name="client_preferences"]').value),
+        general_calif: parseInt(client.querySelector('[name="client_general_calif"]').value),
+        recomendado: parseInt(client.querySelector('[name="client_recomendado"]').value)
     }));
 
     const localData = {
         nombre: document.getElementById('nombre').value,
-        //direccion: direccion,
         telefono: document.getElementById('telefono').value,
         correo_electronico: document.getElementById('correo').value,
         pagina_web: document.getElementById('pagina_web').value,
         tipo_establecimiento: document.getElementById('tipo_establecimiento').value,
         tipo_negocio: document.getElementById('tipo_negocio').value,
-		tipo_cocina: document.getElementById('tipo_cocina').value,
+        tipo_cocina: document.getElementById('tipo_cocina').value,
         horario: {
             apertura: document.getElementById('horario_apertura').value,
             cierre: document.getElementById('horario_cierre').value,
             dias_operacion: diasOperacion
         },
         capacidad: parseInt(document.getElementById('capacidad').value),
-		opciones_reserva: opcionesReserva,
+        opciones_reserva: opcionesReserva,
         opciones_entrega: opcionesEntrega,
-		acc_level: document.getElementById('acc_level').value,
+        acc_level: document.getElementById('acc_level').value,
         metodos_pago: metodosPago,
         promociones_descuentos: document.getElementById('promociones_descuentos').value,
-		
-		calif_promedio: parseFloat(document.getElementById('calif_promedio').value),
-		numero_resenas: parseInt(document.getElementById('numero_resenas').value),
-		opciones_amenidad: opcionesAmenidad,
-		facebook: document.getElementById('facebook').value,
-		instagram: document.getElementById('instagram').value,
-		x: document.getElementById('x').value,
-		
+        calif_promedio: parseFloat(document.getElementById('calif_promedio').value),
+        numero_resenas: parseInt(document.getElementById('numero_resenas').value),
+        opciones_amenidad: opcionesAmenidad,
+        facebook: document.getElementById('facebook').value,
+        instagram: document.getElementById('instagram').value,
+        x: document.getElementById('x').value,
         menu: productos,
-		clientes: clients,
+        clientes: clients,
         ubicacion: {
-            calle: document.getElementById('calle').value, // Nuevo campo: Calle
-            consejo: document.getElementById('consejo').value, // Nuevo campo: Consejo o vecindario
-            municipio: document.getElementById('municipio').value, // Nuevo campo: Municipio
-            provincia: document.getElementById('provincia').value, // Nuevo campo: Provincia
-            codigo_postal: document.getElementById('codigo_postal').value, // Nuevo campo: Código postal
-            pais: document.getElementById('pais').value, // Nuevo campo: País
-            coordenadas: document.getElementById('ubicacion').value // Coordenadas del mapa
+            calle: document.getElementById('calle').value,
+            consejo: document.getElementById('consejo').value,
+            municipio: document.getElementById('municipio').value,
+            provincia: document.getElementById('provincia').value,
+            codigo_postal: document.getElementById('codigo_postal').value,
+            pais: document.getElementById('pais').value,
+            coordenadas: document.getElementById('ubicacion').value
         }
     };
-	
-	
-	personName = document.getElementById('name_person').value;
-	localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
-	fileName = `${localName}.json`
-	
-	const data = {
-		'archive_name': `${personName}/${fileName}`,
-		'json_text': JSON.stringify(localData)
-	};
-	  
-	try {
-		// Usamos window.location.origin para obtener la URL base
-		const apiUrl = `${window.location.origin}/api/save-json`;
+    
+    // Preparar los datos JSON
+    municipio = document.getElementById('municipio').value;
+    localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
+    fileName = `${localName}.json`;
 
-		// Enviamos los datos al servidor usando la URL base detectada
-		const response = await fetch(apiUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data)
-		});
+    const data = {
+        'archive_name': `${municipio}/${fileName}`,
+        'json_text': JSON.stringify(localData),
+    };
 
-		// Intentar leer la respuesta como JSON
-		const textResponse = await response.text(); // Leer la respuesta como texto
+    const imageFiles = document.querySelectorAll('.previewContainer img'); // Asegúrate de que las imágenes estén en elementos <img>
 
-		try {
-			const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
-			if (response.ok) {
-				showAlert(`
-					<h3>Éxito</h3>
-					<p>El archivo se ha subido correctamente.</p>
-					<p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
-				`);
-			} else {
-				showAlert(`
-					<h3>Error</h3>
-					<p>${result.error}</p>
-					<p>No response.ok</p>
-					`);
-			}
-		} catch (error) {
-			// Si la respuesta no es JSON válido, mostramos el texto para depuración
-			showAlert(`
-				<h3>Error al procesar la respuesta</h3>
-				<p>No se pudo analizar la respuesta como JSON.</p>
-				<p>Respuesta del servidor: ${textResponse}</p>
-			`);
-		}
-	} catch (error) {
-		showAlert(`
-			<h3>Error</h3>
-			<p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
-		`);
-	}
+    const formData = new FormData();
+    formData.append('json', new Blob([JSON.stringify(data)], { type: 'application/json' }), fileName);
+
+    // Añadir las imágenes al FormData
+    imageFiles.forEach((img, index) => {
+        const imageFile = img.file; // Verifica si img tiene el archivo original
+        const imageName = `${localName}_${index + 1}.jpg`; // El nombre del archivo será el mismo que el del JSON + el contador
+        formData.append('images', imageFile, imageName); // Añadir imagen con el nombre adecuado
+    });
+
+    try {
+        // Usamos window.location.origin para obtener la URL base
+        const apiUrl = `${window.location.origin}/api/save-json`;
+
+        // Enviar los datos y las imágenes al servidor usando la URL base detectada
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Intentar leer la respuesta como texto
+        const textResponse = await response.text();
+
+        try {
+            const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
+            if (response.ok) {
+                showAlert(`
+                    <h3>Éxito</h3>
+                    <p>El archivo se ha subido correctamente.</p>
+                    <p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
+                `);
+            } else {
+                showAlert(`
+                    <h3>Error</h3>
+                    <p>${result.error}</p>
+                `);
+            }
+        } catch (error) {
+            showAlert(`
+                <h3>Error al procesar la respuesta</h3>
+                <p>No se pudo analizar la respuesta como JSON.</p>
+                <p>Respuesta del servidor: ${textResponse}</p>
+            `);
+        }
+    } catch (error) {
+        showAlert(`
+            <h3>Error</h3>
+            <p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
+        `);
+    }
 });
 
-// Cargar Leaflet.js al finalizar la carga de la página
+
+	// Cargar Leaflet.js al finalizar la carga de la página
 window.addEventListener('load', function() {
     initMap();
 });
 
 // LOGICA DE LAS IMAGENES!
 document.addEventListener('DOMContentLoaded', () => {
-	const imageInput = document.getElementById('imageInput');
-	const selectImagesButton = document.getElementById('selectImagesButton');
-	const previewContainer = document.getElementById('previewContainer');
-	const imageModal = document.getElementById('imageModal');
-	const modalImage = document.getElementById('modalImage');
-	const closeModalButton = document.getElementById('closeModalButton');
+  const selectImagesInput = document.getElementById('selectImagesInput');
+  const selectImagesButton = document.getElementById('selectImagesButton');
+  const capturePhotoInput = document.getElementById('capturePhotoInput');
+  const capturePhotoButton = document.getElementById('capturePhotoButton');
+  const previewContainer = document.getElementById('previewContainer');
+  const imageModal = document.getElementById('imageModal');
+  const modalImage = document.getElementById('modalImage');
+  const closeModalButton = document.getElementById('closeModalButton');
 
-	// Almacena las imágenes seleccionadas
-	const selectedImages = [];
+  // Almacena las imágenes seleccionadas
+  const selectedImages = [];
 
-	// Botón personalizado para abrir el selector de archivos o la cámara
-	selectImagesButton.addEventListener('click', () => {
-		imageInput.click();
-	});
+  // Botón para seleccionar imágenes desde el dispositivo
+  selectImagesButton.addEventListener('click', () => {
+    selectImagesInput.click();
+  });
 
-	// Agregar nuevas imágenes seleccionadas al listado
-	imageInput.addEventListener('change', (event) => {
-		Array.from(event.target.files).forEach((file) => {
-			addImage(file);
-		});
-	});
+  // Botón para capturar una foto
+  capturePhotoButton.addEventListener('click', () => {
+    capturePhotoInput.click();
+  });
 
-	// Función para agregar una imagen al contenedor de previsualización
-	function addImage(file) {
-		if (!file || selectedImages.find((img) => img.name === file.name)) return;
+  // Manejar selección de imágenes desde el dispositivo
+  selectImagesInput.addEventListener('change', (event) => {
+    Array.from(event.target.files).forEach((file) => {
+      addImage(file);
+    });
+  });
 
-		selectedImages.push(file);
-		const imageUrl = URL.createObjectURL(file);
+  // Manejar captura de fotos
+  capturePhotoInput.addEventListener('change', (event) => {
+    Array.from(event.target.files).forEach((file) => {
+      addImage(file);
+    });
+  });
 
-		const previewDiv = document.createElement('div');
-		previewDiv.classList.add('image-preview');
-		previewDiv.style.position = 'relative';
+  // Agregar una imagen al contenedor de previsualización
+  function addImage(file) {
+    if (!file || selectedImages.find((img) => img.name === file.name)) return;
 
-		const img = document.createElement('img');
-		img.src = imageUrl;
-		img.alt = file.name;
-		img.style.cursor = 'pointer';
-		img.style.width = '120px';
-		img.style.height = 'auto';
-		img.style.border = '1px solid #ddd';
-		img.style.borderRadius = '10px';
-	
-		const fileInfo = document.createElement('p');
-		fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-		fileInfo.style.fontSize = '12px';
-		fileInfo.style.marginTop = '5px';
-		fileInfo.style.textAlign = 'center';
+    selectedImages.push(file);
+    const imageUrl = URL.createObjectURL(file);
 
-		const removeButton = document.createElement('button');
-		removeButton.textContent = 'X';
-		removeButton.style = `
-			position: absolute;
-			top: 5px;
-			right: 5px;
-			background: red;
-			color: white;
-			border: none;
-			border-radius: 50%;
-			width: 20px;
-			height: 20px;
-			cursor: pointer;
-		`;
+    const previewDiv = document.createElement('div');
+    previewDiv.classList.add('image-preview');
+    previewDiv.style.position = 'relative';
 
-		removeButton.addEventListener('click', () => {
-			selectedImages.splice(selectedImages.indexOf(file), 1);
-			previewDiv.remove();
-		});
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = file.name;
+    img.style.cursor = 'pointer';
+    img.style.width = '120px';
+    img.style.height = 'auto';
+    img.style.border = '1px solid #ddd';
+    img.style.borderRadius = '10px';
 
-		img.addEventListener('click', () => {
-			modalImage.src = imageUrl;
-			imageModal.style.display = 'flex';
-		});
+    const fileInfo = document.createElement('p');
+    fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+    fileInfo.style.fontSize = '12px';
+    fileInfo.style.marginTop = '5px';
+    fileInfo.style.textAlign = 'center';
 
-		previewDiv.appendChild(img);
-		previewDiv.appendChild(fileInfo);
-		previewDiv.appendChild(removeButton);
-		previewContainer.appendChild(previewDiv);
-	}
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'X';
+    removeButton.style = `
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    `;
+
+    removeButton.addEventListener('click', () => {
+      selectedImages.splice(selectedImages.indexOf(file), 1);
+      previewDiv.remove();
+    });
+
+    img.addEventListener('click', () => {
+      modalImage.src = imageUrl;
+      imageModal.style.display = 'flex';
+    });
+
+    previewDiv.appendChild(img);
+    previewDiv.appendChild(fileInfo);
+    previewDiv.appendChild(removeButton);
+    previewContainer.appendChild(previewDiv);
+  }
 
   // Cerrar el modal de previsualización
-	closeModalButton.addEventListener('click', () => {
-		imageModal.style.display = 'none';
-	});
+  closeModalButton.addEventListener('click', () => {
+    imageModal.style.display = 'none';
+  });
 });
 
 // TERMINA AQUI LA LOGICA DE LAS IMAGENES
