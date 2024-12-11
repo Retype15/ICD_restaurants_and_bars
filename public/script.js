@@ -382,6 +382,43 @@ document.getElementById('add_client').addEventListener('click', function() {
     actualizarOpcionesClientes();
 });
 
+async function sendImagesToSaveImage(imageInput, path) {
+    if (!path) {
+        throw new Error('Se requiere una ruta válida para guardar las imágenes.');
+    }
+
+    const formData = new FormData();
+    formData.append('path', path);
+
+    const files = imageInput instanceof HTMLInputElement ? imageInput.files : imageInput;
+
+    Array.from(files).forEach((file, index) => {
+        const imageKey = `image_${index + 1}`;
+        formData.append(imageKey, file, file.name);
+    });
+
+    try {
+        const apiUrl = `${window.location.origin}/api/save-image`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Error del servidor: ${errorMessage}`);
+        }
+
+        const result = await response.json();
+        console.log('Imágenes subidas con éxito:', result.uploadedImages);
+        alert('Las imágenes se subieron correctamente.');
+    } catch (error) {
+        console.error('Error al subir las imágenes:', error);
+        alert(`Hubo un problema al subir las imágenes: ${error.message}`);
+    }
+}
+
+
 // Captura del formulario para crear el archivo JSON
 document.getElementById('localForm').addEventListener('submit', async function(event) {
     event.preventDefault();
@@ -455,9 +492,9 @@ document.getElementById('localForm').addEventListener('submit', async function(e
     };
 	
 	
-	personName = document.getElementById('municipio').value;
-	localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
-	fileName = `${localName}.json`
+	const personName = document.getElementById('municipio').value;
+	const localName = localData.nombre.replace(/\s+/g, '_').toLowerCase();
+	const fileName = `${localName}.json`
 	
 	const data = {
 		'archive_name': `${personName}/${fileName}`,
@@ -479,16 +516,16 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		
 		// Ejemplo de uso
 		// Obtén las imágenes desde un input file o cualquier otra fuente
-		try{
-			const selectedImages = document.getElementById('selectImagesInput').files;
-			const capturedPhotos = document.getElementById('capturePhotoInput').files;
-			const allImages = [...selectedImages, ...capturedPhotos];
-	
-			// Llamar a la función con las imágenes seleccionadas
-			sendImagesToSaveImage(allImages, `${personName}/${fileName}`);
-			
-		} catch (error){
-			showAlert(error)
+		const selectedImages = document.getElementById('selectImagesInput').files;
+		const capturedPhotos = document.getElementById('capturePhotoInput').files;
+		const allImages = [...selectedImages, ...capturedPhotos];
+
+		const fileList = new DataTransfer();
+		allImages.forEach((file) => fileList.items.add(file));
+		if (allImages.length === 0) {
+			showAlert('No hay imágenes para subir.');
+		} else {
+			sendImagesToSaveImage(fileList.files, `${personName}/${fileName}`);
 		}
 
 			// Intentar leer la respuesta como JSON
@@ -525,39 +562,6 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 	}
 });
 
-async function sendImagesToSaveImage(imageInput , path) {
-	const formData = new FormData();
-	formData.append('path', path);
-
-	Array.from(imageInput.files).forEach((file, index) => {
-		const imageKey = `image_${index + 1}`; // Llave única para cada imagen
-		formData.append(imageKey, file, file.name);
-	});
-
-	try {
-		const apiUrl = `${window.location.origin}/api/save-image`; // URL del endpoint del servidor
-
-		// Enviar las imágenes al servidor con fetch
-		const response = await fetch(apiUrl, {
-			method: 'POST',
-			body: formData,
-		});
-
-		const result = await response.json(); // Leer la respuesta del servidor
-
-		if (response.ok) {
-			console.log('Imágenes subidas con éxito:', result.uploadedImages);
-			alert('Las imágenes se subieron correctamente.');
-		} else {
-			console.error('Error al subir imágenes:', result.error);
-			alert(`Error al subir las imágenes: ${result.error}`);
-		}
-	} catch (error) {
-		console.error('Error al conectar con el servidor:', error);
-		alert('Hubo un problema al subir las imágenes.');
-	}
-});
-
 
 // Cargar Leaflet.js al finalizar la carga de la página
 window.addEventListener('load', function() {
@@ -566,103 +570,103 @@ window.addEventListener('load', function() {
 
 // LOGICA DE LAS IMAGENES!
 document.addEventListener('DOMContentLoaded', () => {
-  const selectImagesInput = document.getElementById('selectImagesInput');
-  const selectImagesButton = document.getElementById('selectImagesButton');
-  const capturePhotoInput = document.getElementById('capturePhotoInput');
-  const capturePhotoButton = document.getElementById('capturePhotoButton');
-  const previewContainer = document.getElementById('previewContainer');
-  const imageModal = document.getElementById('imageModal');
-  const modalImage = document.getElementById('modalImage');
-  const closeModalButton = document.getElementById('closeModalButton');
+	const selectImagesInput = document.getElementById('selectImagesInput');
+	const selectImagesButton = document.getElementById('selectImagesButton');
+	const capturePhotoInput = document.getElementById('capturePhotoInput');
+	const capturePhotoButton = document.getElementById('capturePhotoButton');
+	const previewContainer = document.getElementById('previewContainer');
+	const imageModal = document.getElementById('imageModal');
+	const modalImage = document.getElementById('modalImage');
+	const closeModalButton = document.getElementById('closeModalButton');
 
-  // Almacena las imágenes seleccionadas
-  const selectedImages = [];
+	// Almacena las imágenes seleccionadas
+	const selectedImages = [];
 
-  // Botón para seleccionar imágenes desde el dispositivo
-  selectImagesButton.addEventListener('click', () => {
-    selectImagesInput.click();
-  });
+	// Botón para seleccionar imágenes desde el dispositivo
+	selectImagesButton.addEventListener('click', () => {
+		selectImagesInput.click();
+	});
 
-  // Botón para capturar una foto
-  capturePhotoButton.addEventListener('click', () => {
-    capturePhotoInput.click();
-  });
+	// Botón para capturar una foto
+	capturePhotoButton.addEventListener('click', () => {
+		capturePhotoInput.click();
+	});
 
-  // Manejar selección de imágenes desde el dispositivo
-  selectImagesInput.addEventListener('change', (event) => {
-    Array.from(event.target.files).forEach((file) => {
-      addImage(file);
-    });
-  });
+	// Manejar selección de imágenes desde el dispositivo
+	selectImagesInput.addEventListener('change', (event) => {
+		Array.from(event.target.files).forEach((file) => {
+			addImage(file);
+		});
+	});
 
-  // Manejar captura de fotos
-  capturePhotoInput.addEventListener('change', (event) => {
-    Array.from(event.target.files).forEach((file) => {
-      addImage(file);
-    });
-  });
+	// Manejar captura de fotos
+	capturePhotoInput.addEventListener('change', (event) => {
+		Array.from(event.target.files).forEach((file) => {
+			addImage(file);
+		});
+	});
 
-  // Agregar una imagen al contenedor de previsualización
-  function addImage(file) {
-    if (!file || selectedImages.find((img) => img.name === file.name)) return;
+	// Agregar una imagen al contenedor de previsualización
+	function addImage(file) {
+		if (!file || selectedImages.find((img) => img.name === file.name)) return;
 
-    selectedImages.push(file);
-    const imageUrl = URL.createObjectURL(file);
+		selectedImages.push(file);
+		const imageUrl = URL.createObjectURL(file);
 
-    const previewDiv = document.createElement('div');
-    previewDiv.classList.add('image-preview');
-    previewDiv.style.position = 'relative';
+		const previewDiv = document.createElement('div');
+		previewDiv.classList.add('image-preview');
+		previewDiv.style.position = 'relative';
 
-    const img = document.createElement('img');
-    img.src = imageUrl;
-    img.alt = file.name;
-    img.style.cursor = 'pointer';
-    img.style.width = '120px';
-    img.style.height = 'auto';
-    img.style.border = '1px solid #ddd';
-    img.style.borderRadius = '10px';
+		const img = document.createElement('img');
+		img.src = imageUrl;
+		img.alt = file.name;
+		img.style.cursor = 'pointer';
+		img.style.width = '120px';
+		img.style.height = 'auto';
+		img.style.border = '1px solid #ddd';
+		img.style.borderRadius = '10px';
 
-    const fileInfo = document.createElement('p');
-    fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-    fileInfo.style.fontSize = '12px';
-    fileInfo.style.marginTop = '5px';
-    fileInfo.style.textAlign = 'center';
+		const fileInfo = document.createElement('p');
+		fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+		fileInfo.style.fontSize = '12px';
+		fileInfo.style.marginTop = '5px';
+		fileInfo.style.textAlign = 'center';
 
-    const removeButton = document.createElement('button');
-    removeButton.textContent = 'X';
-    removeButton.style = `
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: red;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    `;
+		const removeButton = document.createElement('button');
+		removeButton.textContent = 'X';
+		removeButton.style = `
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			background: red;
+			color: white;
+			border: none;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			cursor: pointer;
+		`;
 
-    removeButton.addEventListener('click', () => {
-      selectedImages.splice(selectedImages.indexOf(file), 1);
-      previewDiv.remove();
-    });
+		removeButton.addEventListener('click', () => {
+			selectedImages.splice(selectedImages.indexOf(file), 1);
+			previewDiv.remove();
+		});
 
-    img.addEventListener('click', () => {
-      modalImage.src = imageUrl;
-      imageModal.style.display = 'flex';
-    });
+		img.addEventListener('click', () => {
+			modalImage.src = imageUrl;
+			imageModal.style.display = 'flex';
+		});
 
-    previewDiv.appendChild(img);
-    previewDiv.appendChild(fileInfo);
-    previewDiv.appendChild(removeButton);
-    previewContainer.appendChild(previewDiv);
-  }
+		previewDiv.appendChild(img);
+		previewDiv.appendChild(fileInfo);
+		previewDiv.appendChild(removeButton);
+		previewContainer.appendChild(previewDiv);
+	}
 
-  // Cerrar el modal de previsualización
-  closeModalButton.addEventListener('click', () => {
-    imageModal.style.display = 'none';
-  });
+	// Cerrar el modal de previsualización
+	closeModalButton.addEventListener('click', () => {
+		imageModal.style.display = 'none';
+	});
 });
 
 // TERMINA AQUI LA LOGICA DE LAS IMAGENES
