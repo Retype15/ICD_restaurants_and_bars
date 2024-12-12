@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Restaurantes y Bares</title>
+    <link rel="stylesheet" href="styles.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <!-- Cargar los estilos de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="background-emojis">
+        <div class="emoji">馃崝</div> <!-- Hamburguesa -->
+        <div class="emoji">馃崟</div> <!-- Pizza -->
+        <div class="emoji">馃崳</div> <!-- Sushi -->
+        <div class="emoji">馃崺</div> <!-- Dona -->
+        <div class="emoji">馃崻</div> <!-- Galleta -->
+        <div class="emoji">馃嵃</div> <!-- Pastel -->
+        <div class="emoji">馃崼</div> <!-- Chocolate -->
+        <div class="emoji">馃崷</div> <!-- Helado -->
+        <div class="emoji">馃嵀</div> <!-- Chupachupa -->
+        <div class="emoji">馃崕</div> <!-- Manzana -->
+        <div class="emoji">馃崌</div> <!-- Uvas -->
+        <div class="emoji">馃崏</div> <!-- Sandia -->
+    </div>
+</body>
+
+
+    <div class="container">
+        <h1>Formulario de Restaurantes y Bares</h1>
+        <form id="localForm">
+            <fieldset>
+                <legend>Informaci贸n General</legend>
+                <label for="nombre">Nombre del Establecimiento:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre del establecimiento" required><br>
+
+                <label for="telefono">Tel茅fono:</label>
+                <input type="text" id="telefono" name="telefono" placeholder="Telefono del establecimiento (Opcional)"><br>
+
+                <label for="correo">Correo Electr贸nico:</label>
+                <input type="email" id="correo" name="correo" placeholder="Correo del establecimiento (Opcional)"><br>
+
+                <label for="pagina_web">P谩gina Web:</label>
+                <input type="url" id="pagina_web" name="pagina_web" placeholder="Pagina web del negocio (Opcional)"><br>				
+				
+                <label for="tipo_establecimiento">Tipo de Establecimiento:</label>
+                <select id="tipo_establecimiento" name="tipo_establecimiento" required>
+					<option value="" disabled selected>Seleccione una opci贸n</option>
+                    <option value="Restaurante">Restaurante</option>
+                    <option value="Bar">Bar</option>
+                </select><br>
+
+                <label for="tipo_negocio">Tipo de Negocio:</label>
+                <select id="tipo_negocio" name="tipo_negocio" required>
+					<option value="" disabled selected>Seleccione una opci贸n</option>
+                    <option value="Estatal">Estatal</option>
+                    <option value="Privado">Privado</option>
+                </select><br>
+				
+				<label for="tipo_cocina">Tipo de Cocina:</label>
+				<select id="tipo_cocina" name="tipo_cocina" required>
+					<option value="" disabled selected>Seleccione una opci贸n</option>
+                    <option value="Cubana">Cubana</option>
+                    <option value="China">China</option>
+                    <option value="Italiana">Italiana</option>
+                    <option value="Mexicana">Mexicana</option>
+                    <option value="Japonesa">Japonesa</option>
+                    <option value="Mixta">Mixta</option>
+                    <option value="Otros">Otros</option>
+                </select><br>
+				
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos de Operaci贸n</legend>
+                <label for="horario_apertura">Hora de Apertura:</label>
+                <input type="time" id="horario_apertura" name="horario_apertura" required><br>
+
+                <label for="horario_cierre">Hora de Cierre:</label>
+                <input type="time" id="horario_cierre" name="horario_cierre" required><br>
+
+                <label for="dias_operacion">D铆as de Operaci贸n:</label><br>
+                <div class="dias-operacion">
+                    <div class="dia" data-dia="Lunes">Lunes</div>
+                    <div class="dia" data-dia="Martes">Martes</div>
+                    <div class="dia" data-dia="Miercoles">Mi茅rcoles</div>
+                    <div class="dia" data-dia="Jueves">Jueves</div>
+                    <div class="dia" data-dia="Viernes">Viernes</div>
+                    <div class="dia" data-dia="Sabado">S谩bado</div>
+                    <div class="dia" data-dia="Domingo">Domingo</div>
+                </div><br>
+
+                <label for="capacidad">Capacidad:</label>
+                <input type="number" id="capacidad" name="capacidad" placeholder="Cantidad maxima de personas que admite (Opcional)"><br>
+
+                <label for="opciones_reserva">Opciones de Reserva:</label><br>
+                <div class="opciones-reserva">
+                    <div class="reserva" data-reserva="En linea">Reservas en linea</div>
+                    <div class="reserva" data-reserva="Telefonica">Reservas por tel茅fono</div>
+                    <div class="reserva" data-reserva="Personal">Reservas en persona</div>
+                    <div class="reserva" data-reserva="Otros">Otros</div>
+                </div>
+
+                <label for="opciones_entrega">Opciones de Entrega:</label><br>
+                <div class="opciones-entrega">
+                    <div class="entrega" data-entrega="Domicilio">A domicilio</div>
+                    <div class="entrega" data-entrega="Para llevar">Para llevar</div>
+                    <div class="entrega" data-entrega="Entrega local">Entrega en local</div>
+                    <div class="entrega" data-entrega="Otros">Otros</div>
+                </div><br>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos Financieros</legend>
+				
+				<label for="acc_level">Nivel de accesibilidad economica:</label><br>
+				<select id="acc_level" name="acc_level" required>
+					<option value="" disabled selected>Seleccione una opci贸n</option>
+                    <option value="Economico">Econ贸mico</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Lujo">Lujoso</option>
+                </select><br>
+				
+                <label for="metodos_pago">M茅todos de Pago:</label><br>
+                <div class="metodos-pago">
+                    <div class="metodo" data-metodo="Efectivo">En efectivo</div>
+                    <div class="metodo" data-metodo="Tarjeta">Tarjeta de cr茅dito</div>
+                    <div class="metodo" data-metodo="Transferencia">Transferencia bancaria</div>
+                    <div class="metodo" data-metodo="Otros">Otros</div>
+                </div><br>
+
+                <label for="promociones_descuentos">Promociones y Descuentos:</label>
+                <input type="text" id="promociones_descuentos" name="promociones_descuentos" placeholder="Ej. 2x1, 10%">
+            </fieldset>
+			
+			<fieldset>
+				<legend>Informaciones Adicionales</legend>
+
+				<label for="calif_promedio">Calificaci贸n Promedio:</label>
+				<input type="number" id="calif_promedio" name="calif_promedio" step="0.1" min="0" max="5" placeholder="Ej. 4.5"><br>
+
+				<label for="numero_resenas">Número de Rese?as:</label>
+				<input type="number" id="numero_resenas" name="numero_resenas" placeholder="Ej. 150"><br>
+
+				<label for="amenidades">Amenidades y Servicios:</label><br>
+				<div class="amenidades">
+					<div class="amenidad" data-amenidad="wifi">Wi-Fi</div>
+					<div class="amenidad" data-amenidad="accesible_a_invalidos">Accesible para invalidos</div>
+					<div class="amenidad" data-amenidad="musica_vivo">Música en vivo</div>
+					<div class="amenidad" data-amenidad="aire_libre">Asientos al aire libre</div>
+					<div class="amenidad" data-amenidad="parking">Estacionamiento</div>
+					<div class="amenidad" data-amenidad="pet_friendly">Permite mascotas</div>
+					<!-- A?adir más amenidades aqui -->
+				</div><br>
+
+				<label for="redes_sociales">Redes Sociales:</label><br>
+				<input type="url" id="facebook" name="facebook" placeholder="Facebook URL (Opcional)"><br>
+				<input type="url" id="instagram" name="instagram" placeholder="Instagram URL (Opcional)"><br>
+				<input type="url" id="x" name="x" placeholder="X(Twitter) URL (Opcional)"><br>
+
+			</fieldset>
+			
+			<fieldset>
+                <legend>Datos del Menú</legend>
+                <div id="menu_container"></div>
+                <button type="button" id="add_producto">A帽adir producto</button><br>
+            </fieldset>
+					
+            <fieldset>
+                <legend>Clientes</legend>
+                <div id="client_container"></div>
+                <button type="button" id="add_client">A帽adir nuevo cliente</button><br>
+            </fieldset>
+			
+			<fieldset style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+				<legend>Selecciona imágenes o toma fotos:</legend>
+
+				<!-- Botón para seleccionar imágenes desde el dispositivo -->
+				<input type="file" id="selectImagesInput" accept="image/*" multiple style="display: none;">
+				<button type="button" id="selectImagesButton" style="padding: 10px 20px; border: none; background-color: #007BFF; color: white; border-radius: 5px; cursor: pointer;">
+					Seleccionar Imágenes
+				</button>
+			  
+				<!-- Botón para capturar fotos directamente -->
+				<input type="file" id="capturePhotoInput" accept="image/*" capture="environment" style="display: none;">
+				<button type="button" id="capturePhotoButton" style="padding: 10px 20px; border: none; background-color: #28A745; color: white; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+					Tomar Foto
+				</button>
+				<br><br>
+
+				<!-- Contenedor para previsualización -->
+				<div id="previewContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+					<!-- Las previsualizaciones de imágenes aparecerán aquí -->
+				</div>
+
+				<!-- Modal de previsualización -->
+				<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000;">
+					<img id="modalImage" style="max-width: 90%; max-height: 90%; border: 5px solid white; border-radius: 10px;">
+					<button id="closeModalButton" style="position: absolute; top: 10px; right: 20px; background: red; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">X</button>
+				</div>
+			</fieldset>
+
+
+
+
+			
+			<fieldset>
+				<legend> Ubicaci贸n</legend>
+				<div id="map" style="height: 400px; width: 100%;"></div><br>
+
+				<button type="button" id="obtener_ubicacion">Obtener mi ubicaci贸n</button><br><br>
+
+				<!-- Campos para la direcci贸n desglosada -->
+				<label for="calle">Calle:</label>
+				<input type="text" id="calle" name="calle" placeholder="Ej. Calle Falsa 123"><br>
+
+				<label for="consejo">Consejo:</label>
+				<input type="text" id="consejo" name="consejo" placeholder="Ej. Barrio Centro"><br>
+
+				<label for="municipio">Municipio:</label>
+				<input type="text" id="municipio" name="municipio" placeholder="Ej. Municipio Central"><br>
+
+				<label for="provincia">Provincia:</label>
+				<input type="text" id="provincia" name="provincia" placeholder="Ej. provincia Habana"><br>
+
+				<label for="codigo_postal">C贸digo Postal:</label>
+				<input type="text" id="codigo_postal" name="codigo_postal" placeholder="Ej. 12345"><br>
+
+				<label for="pais">Pa铆s:</label>
+				<input type="text" id="pais" name="pais" placeholder="Ej. Pa铆s ABC"><br>
+
+				<input type="text" id="ubicacion" name="ubicacion" readonly placeholder="Coordenadas de ubicaci贸n">
+			</fieldset><br>
+
+			<!--
+			<fieldset>
+			<legend for="name_person">Nombre del entrevistador(tu nombre):</legend>
+            <input type="text" id="name_person" name="name_person" placeholder="Escribir solamente 'TEST' si solo estas probando..." required>
+			</fieldset>
+			-->
+            <button type="submit">Guardar Datos</button><br><br>
+			
+        </form>
+    </div>
+	
+	    <!-- Ventana de Alerta -->
+	<!-- Ventana de Alerta -->
+	<div class="alerta-container" id="alerta-container">
+		<div class="alerta">
+			<p id="alerta-texto"></p>
+			<button class="alerta-btn" id="alerta-btn">Aceptar</button>
+		</div>
+	</div>
+	
+	
+	
+	<div class="response" id="response"></div>
+	
+    <script src="script.js"></script>
+
+    <!-- Cargar Leaflet.js -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</body>
+</html>
