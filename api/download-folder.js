@@ -40,7 +40,12 @@ export async function GET(req) {
       const response = await fetch(blob.url);
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      archive.append(buffer, { name: blob.name.replace(`${path}/`, '') });
+      const fileName = blob.name.replace(`${path}/`, '');
+
+      // Only append files, not empty folders
+      if (fileName) {
+        archive.append(buffer, { name: fileName });
+      }
     }
 
     archive.finalize();
