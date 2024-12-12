@@ -46,14 +46,6 @@
     .file-item button:hover {
       background-color: #0056b3;
     }
-    .error-message {
-      text-align: center;
-      color: red;
-    }
-    .no-files {
-      text-align: center;
-      color: #555;
-    }
     .breadcrumb {
       margin-bottom: 20px;
       text-align: center;
@@ -102,7 +94,7 @@
         const parts = file.name.split('/');
         if (parts.length > 1) {
           const folderName = parts[0];
-          folders[folderName] = folders[folderName] || { type: 'folder', name: folderName, url: null };
+          folders[folderName] = folders[folderName] || { type: 'folder', name: folderName };
         } else {
           const fileItem = document.createElement('div');
           fileItem.className = 'file-item';
@@ -131,19 +123,11 @@
           fetchFiles(currentPath);
         };
 
-        const enterButton = document.createElement('button');
-        enterButton.textContent = 'Enter';
-        enterButton.onclick = () => {
-          currentPath.push(folder.name);
-          fetchFiles(currentPath);
-        };
-
         const downloadFolderButton = document.createElement('button');
         downloadFolderButton.textContent = 'Download Folder';
         downloadFolderButton.onclick = () => downloadFolder(currentPath.concat(folder.name).join('/'));
 
         fileItem.appendChild(folderName);
-        fileItem.appendChild(enterButton);
         fileItem.appendChild(downloadFolderButton);
         fileListElement.appendChild(fileItem);
       });
