@@ -71,25 +71,24 @@
 
   <script>
     let currentPath = [];
+    let filesData = [];
 
-    // Fetch the list of files from the server
-    async function fetchFiles(path = []) {
-      const pathString = path.join('/');
+    // Fetch the list of files from the server once
+    async function fetchFiles() {
       try {
-        const response = await fetch(`/api/files?path=${pathString}`); // Endpoint to fetch files
+        const response = await fetch(`/api/files`); // Endpoint to fetch files
         if (!response.ok) {
           throw new Error(`Failed to fetch files: ${response.statusText}`);
         }
-
-        const files = await response.json();
-        renderFileList(files, path);
+        filesData = await response.json();
+        renderFileList(filesData, currentPath);
       } catch (error) {
         console.error(error);
         document.getElementById('file-list').innerHTML = '<p class="error-message">Error loading files. Please try again later.</p>';
       }
     }
 
-    // Render the file list
+    // Render the file list based on the current path
     function renderFileList(files, path) {
       const fileListElement = document.getElementById('file-list');
       const breadcrumbElement = document.getElementById('breadcrumb');
@@ -97,25 +96,29 @@
       fileListElement.innerHTML = '';
       breadcrumbElement.innerHTML = path.length === 0 ? 'Home' : `Home / ${path.join(' / ')}`;
 
+      const currentFolder = path.join('/') + '/';
       const folders = {};
       files.forEach(file => {
-        const parts = file.name.split('/');
-        if (parts.length > 1) {
-          const folderName = parts.slice(0, -1).join('/');
-          folders[folderName] = folders[folderName] || { type: 'folder', name: folderName };
-        } else {
-          const fileItem = document.createElement('div');
-          fileItem.className = 'file-item';
+        if (file.name.startsWith(currentFolder)) {
+          const relativePath = file.name.slice(currentFolder.length);
+          const parts = relativePath.split('/');
+          if (parts.length > 1) {
+            const folderName = parts[0];
+            folders[folderName] = folders[folderName] || { type: 'folder', name: folderName };
+          } else {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
 
-          const fileName = document.createElement('span');
-          fileName.textContent = file.name;
+            const fileName = document.createElement('span');
+            fileName.textContent = relativePath;
 
-          const downloadButton = document.createElement('button');
-          downloadButton.textContent = 'Download';
-          downloadButton.onclick = () => downloadFile(file.url);
-          fileItem.appendChild(fileName);
-          fileItem.appendChild(downloadButton);
-          fileListElement.appendChild(fileItem);
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download';
+            downloadButton.onclick = () => downloadFile(file.url);
+            fileItem.appendChild(fileName);
+            fileItem.appendChild(downloadButton);
+            fileListElement.appendChild(fileItem);
+          }
         }
       });
 
@@ -128,7 +131,7 @@
         folderName.style.cursor = 'pointer';
         folderName.onclick = () => {
           currentPath.push(folder.name);
-          fetchFiles(currentPath);
+          renderFileList(filesData, currentPath);
         };
 
         const downloadFolderButton = document.createElement('button');
@@ -143,7 +146,7 @@
       breadcrumbElement.onclick = () => {
         if (currentPath.length > 0) {
           currentPath.pop();
-          fetchFiles(currentPath);
+          renderFileList(filesData, currentPath);
         }
       };
     }
@@ -180,7 +183,7 @@
       }
     }
 
-    // Initialize
+    // Initialize and fetch files once
     fetchFiles();
   </script>
 </body>
