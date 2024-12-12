@@ -54,25 +54,35 @@
       text-align: center;
       color: #555;
     }
+    .breadcrumb {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #007BFF;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>Download Files</h1>
+  <div class="breadcrumb" id="breadcrumb">Home</div>
   <div class="file-list" id="file-list">
     <p class="no-files">Loading files...</p>
   </div>
 
   <script>
+    let currentPath = [];
+
     // Fetch the list of files from the server
-    async function fetchFiles() {
+    async function fetchFiles(path = []) {
+      const pathString = path.join('/');
       try {
-        const response = await fetch('/api/files'); // Endpoint para obtener los archivos disponibles
+        const response = await fetch(`/api/files?path=${pathString}`); // Endpoint to fetch files
         if (!response.ok) {
           throw new Error(`Failed to fetch files: ${response.statusText}`);
         }
 
         const files = await response.json();
-        renderFileList(files);
+        renderFileList(files, path);
       } catch (error) {
         console.error(error);
         document.getElementById('file-list').innerHTML = '<p class="error-message">Error loading files. Please try again later.</p>';
@@ -80,9 +90,12 @@
     }
 
     // Render the file list
-    function renderFileList(files) {
+    function renderFileList(files, path) {
       const fileListElement = document.getElementById('file-list');
+      const breadcrumbElement = document.getElementById('breadcrumb');
+
       fileListElement.innerHTML = '';
+      breadcrumbElement.innerHTML = path.length === 0 ? 'Home' : `Home / ${path.join(' / ')}`;
 
       if (files.length === 0) {
         fileListElement.innerHTML = '<p class="no-files">No files available for download.</p>';
@@ -96,15 +109,29 @@
         const fileName = document.createElement('span');
         fileName.textContent = file.name;
 
-        const downloadButton = document.createElement('button');
-        downloadButton.textContent = 'Download';
-        downloadButton.onclick = () => downloadFile(file.url);
+        if (file.type === 'folder') {
+          fileName.style.cursor = 'pointer';
+          fileName.onclick = () => {
+            currentPath.push(file.name);
+            fetchFiles(currentPath);
+          };
+        } else {
+          const downloadButton = document.createElement('button');
+          downloadButton.textContent = 'Download';
+          downloadButton.onclick = () => downloadFile(file.url);
+          fileItem.appendChild(downloadButton);
+        }
 
         fileItem.appendChild(fileName);
-        fileItem.appendChild(downloadButton);
-
         fileListElement.appendChild(fileItem);
       });
+
+      breadcrumbElement.onclick = () => {
+        if (currentPath.length > 0) {
+          currentPath.pop();
+          fetchFiles(currentPath);
+        }
+      };
     }
 
     // Download a file
