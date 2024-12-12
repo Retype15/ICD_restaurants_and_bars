@@ -16,7 +16,7 @@
       margin: 10px 0 5px;
       display: block;
     }
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 8px;
       font-size: 1rem;
@@ -61,6 +61,12 @@
     <label for="fileInput">Seleccionar archivo JSON/Texto:</label>
     <input type="file" id="fileInput" name="fileInput" accept=".json,.txt">
 
+    <label for="fileType">Tipo de archivo (para texto manual):</label>
+    <select id="fileType" name="fileType">
+      <option value="json">.json</option>
+      <option value="txt">.txt</option>
+    </select>
+
     <label for="jsonText">Texto JSON (json_text) - Ignorado si se selecciona un archivo:</label>
     <textarea id="jsonText" name="jsonText" rows="10"></textarea>
 
@@ -80,6 +86,7 @@
     const responseDiv = document.getElementById('response');
     const fileInput = document.getElementById('fileInput');
     const jsonText = document.getElementById('jsonText');
+    const fileType = document.getElementById('fileType');
     const imageInput = document.getElementById('imageInput');
     const imagePreview = document.getElementById('imagePreview');
 
@@ -87,8 +94,10 @@
     fileInput.addEventListener('change', () => {
       if (fileInput.files.length > 0) {
         jsonText.style.display = 'none';
+        fileType.style.display = 'none';
       } else {
         jsonText.style.display = 'block';
+        fileType.style.display = 'block';
       }
     });
 
@@ -121,14 +130,15 @@
         const file = fileInput.files[0];
         const reader = new FileReader();
         reader.onload = async () => {
-          const jsonText = reader.result;
-          const data = { json_text: jsonText, archive_name: `${path}/${archiveName}` };
+          const extension = file.name.split('.').pop();
+          const data = { json_text: reader.result, archive_name: `${path}/${archiveName}.${extension}` };
           await uploadJson(data);
         };
         reader.readAsText(file);
       } else {
         const jsonData = jsonText.value;
-        const data = { json_text: jsonData, archive_name: `${path}/${archiveName}.json` };
+        const selectedFileType = fileType.value;
+        const data = { json_text: jsonData, archive_name: `${path}/${archiveName}.${selectedFileType}` };
         await uploadJson(data);
       }
 
