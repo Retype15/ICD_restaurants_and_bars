@@ -37,17 +37,20 @@ export async function GET(req) {
 
     // Add each blob to the archive
     for (const blob of blobs) {
-      const response = await fetch(blob.url);
-      const arrayBuffer = await response.arrayBuffer();
+      const fetchResponse = await fetch(blob.url);
+      const arrayBuffer = await fetchResponse.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      const fileName = blob.name.replace(`${path}/`, '');
+      const fileName = blob.pathname.replace(`${path}/`, '');
 
       // Only append files, not empty folders
       if (fileName) {
         archive.append(buffer, { name: fileName });
+      } else {
+        console.warn(`Skipping empty or undefined blob name for path: ${blob.pathname}`);
       }
     }
 
+    // Finalize the archive
     archive.finalize();
 
     return new Response(passThroughStream, { headers });
