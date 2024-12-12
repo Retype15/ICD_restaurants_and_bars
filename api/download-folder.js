@@ -38,7 +38,8 @@ export async function GET(req) {
     // Add each blob to the archive
     for (const blob of blobs) {
       const response = await fetch(blob.url);
-      const buffer = await response.buffer();
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
       archive.append(buffer, { name: blob.name.replace(`${path}/`, '') });
     }
 
