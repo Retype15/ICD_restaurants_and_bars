@@ -3,8 +3,13 @@ import archiver from 'archiver';
 import { NextResponse } from 'next/server';
 import { PassThrough } from 'stream';
 
-export async function GET(req, res) {
-  const path = req.query.path;
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const path = searchParams.get('path');
+
+  if (!path) {
+    return NextResponse.json({ error: 'Path query parameter is missing' }, { status: 400 });
+  }
 
   try {
     const response = await list(); // Fetch the list of blobs
@@ -22,25 +27,24 @@ export async function GET(req, res) {
     const archive = archiver('zip');
     const passThroughStream = new PassThrough();
 
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', `attachment; filename="${path}.zip"`);
+    // Set headers for the response
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/zip');
+    headers.append('Content-Disposition', `attachment; filename="${path}.zip"`);
 
+    // Pipe the archive stream to the response stream
     archive.pipe(passThroughStream);
-    passThroughStream.pipe(res);
 
+    // Add each blob to the archive
     for (const blob of blobs) {
-      const request = fetch(blob.url)
-        .then(response => response.buffer())
-        .then(buffer => {
-          archive.append(buffer, { name: blob.name.replace(`${path}/`, '') });
-        })
-        .catch(error => {
-          console.error(`Error fetching blob ${blob.pathname}:`, error);
-          throw error;
-        });
+      const response = await fetch(blob.url);
+      const buffer = await response.buffer();
+      archive.append(buffer, { name: blob.name.replace(`${path}/`, '') });
     }
 
     archive.finalize();
+
+    return new Response(passThroughStream, { headers });
   } catch (error) {
     console.error('Error fetching files:', error);
     return NextResponse.json(
