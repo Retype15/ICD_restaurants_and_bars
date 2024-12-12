@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir JSON o Imágenes al Blob Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    label {
+      font-size: 1rem;
+      margin: 10px 0 5px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .response {
+      margin-top: 20px;
+    }
+    .preview {
+      margin-top: 20px;
+    }
+    .preview img {
+      max-width: 100px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Subir JSON o Imágenes al Blob Store</h1>
+
+  <form id="upload-form">
+    <label for="pathInput">Ruta donde guardar (path):</label>
+    <input type="text" id="pathInput" name="path" required>
+
+    <label for="archiveName">Nombre del archivo (archive_name):</label>
+    <input type="text" id="archiveName" name="archiveName" required>
+
+    <label for="fileInput">Seleccionar archivo JSON/Texto:</label>
+    <input type="file" id="fileInput" name="fileInput" accept=".json,.txt">
+
+    <label for="jsonText">Texto JSON (json_text) - Ignorado si se selecciona un archivo:</label>
+    <textarea id="jsonText" name="jsonText" rows="10"></textarea>
+
+    <label for="imageInput">Seleccionar imágenes:</label>
+    <input type="file" id="imageInput" name="imageInput" accept=".png,.jpg,.jpeg" multiple>
+
+    <div class="preview" id="imagePreview"></div>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div class="response" id="response"></div>
+
+  <script>
+    // Obtener los elementos del formulario y la respuesta
+    const form = document.getElementById('upload-form');
+    const responseDiv = document.getElementById('response');
+    const fileInput = document.getElementById('fileInput');
+    const jsonText = document.getElementById('jsonText');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+
+    // Mostrar/ocultar el campo de texto JSON según la selección del archivo
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        jsonText.style.display = 'none';
+      } else {
+        jsonText.style.display = 'block';
+      }
+    });
+
+    // Previsualizar las imágenes seleccionadas
+    imageInput.addEventListener('change', () => {
+      imagePreview.innerHTML = '';
+      Array.from(imageInput.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          imagePreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const path = document.getElementById('pathInput').value;
+      const archiveName = document.getElementById('archiveName').value;
+
+      // Crear el objeto de datos a enviar
+      const formData = new FormData();
+      formData.append('path', path);
+
+      if (fileInput.files.length > 0) {
+        formData.append('file', fileInput.files[0], `${path}/${archiveName}`);
+      } else {
+        const blob = new Blob([jsonText.value], { type: 'application/json' });
+        formData.append('file', blob, `${path}/${archiveName}.json`);
+      }
+
+      Array.from(imageInput.files).forEach(file => {
+        const extension = file.name.split('.').pop(); // Extraer la extensión del archivo
+        formData.append('images', file, `${path}/${archiveName}_${Date.now()}.${extension}`);
+      });
+
+      try {
+        // Usamos window.location.origin para obtener la URL base
+        const apiUrl = `${window.location.origin}/api/save-file`;
+
+        // Enviamos los datos al servidor usando la URL base detectada
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        // Intentar leer la respuesta como JSON
+        const textResponse = await response.text(); // Leer la respuesta como texto
+
+        try {
+          const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
+          if (response.ok) {
+            responseDiv.innerHTML = `
+              <h3>Éxito</h3>
+              <p>El archivo se ha subido correctamente.</p>
+              ${result.uploadedImages ? `<p>Imágenes subidas:</p>${result.uploadedImages.map(image => `<p><a href="${image.url}" target="_blank">${image.savedName}</a></p>`).join('')}` : ''}
+            `;
+          } else {
+            responseDiv.innerHTML = `
+              <h3>Error</h3>
+              <p>${result.error}</p>
+            `;
+          }
+        } catch (error) {
+          // Si la respuesta no es JSON válido, mostramos el texto para depuración
+          responseDiv.innerHTML = `
+            <h3>Error al procesar la respuesta</h3>
+            <p>No se pudo analizar la respuesta como JSON.</p>
+            <p>Respuesta del servidor: ${textResponse}</p>
+          `;
+        }
+      } catch (error) {
+        responseDiv.innerHTML = `
+          <h3>Error</h3>
+          <p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
+        `;
+      }
+    });
+
+  </script>
+
+</body>
+</html>
