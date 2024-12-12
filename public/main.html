@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a la página de datos de restaurantes y bares</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #ffa07a, #fff5ee);
+            color: #333;
+        }
+        header {
+            background-color: #f25a5a;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+        }
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            padding: 15px 30px;
+            background-color: #ff6347;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        nav a:hover {
+            background-color: #ff7f50;
+            transform: translateY(-3px);
+        }
+        main {
+            padding: 50px;
+            text-align: center;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        main h2 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #ff4500;
+        }
+        .description {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin: 0 auto;
+            max-width: 900px;
+            text-align: left;
+        }
+        .description div {
+            background-color: #fdf5e6;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .description h3 {
+            margin: 0 0 10px;
+            font-size: 2rem;
+            color: #ff6347;
+        }
+        .description p {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffe4b5;
+            border-top: 2px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a la página de datos de restaurantes y bares</h1>
+        <nav>
+            <a href="index.html">Añadir Restaurantes/Bares</a>
+            <a href="download.html">Descargar Datos</a>
+            <a href="send.html">Subir Menús Manualmente</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Explora tus opciones</h2>
+        <div class="description">
+            <div>
+                <h3>Añadir Restaurantes/Bares</h3>
+                <p>Visita esta página para rellenar formularios detallados sobre restaurantes y bares. Comparte nombres, ubicaciones y especialidades para que otros los descubran.</p>
+            </div>
+            <div>
+                <h3>Descargar Datos</h3>
+                <p>Consulta y descarga conjuntos de datos aportados por otros usuarios, organizados por municipios de la Habana para un acceso fácil y rápido.</p>
+            </div>
+            <div>
+                <h3>Subir Menús</h3>
+                <p>Sube archivos e imágenes de menús de manera manual para crear un recurso completo para los amantes de la gastronomía y negocios.</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Rety-On corporation. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
