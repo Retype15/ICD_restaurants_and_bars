@@ -482,6 +482,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		// Obtén las imágenes desde un input file o cualquier otra fuente
 		const selectedImages = document.getElementById('selectImagesInput').files;
 		const capturedPhotos = document.getElementById('capturePhotoInput').files;
+		const previewContainer = document.getElementById('previewContainer').files;
 		const allImages = [...selectedImages, ...capturedPhotos];
 
 		const fileList = new DataTransfer();
@@ -489,7 +490,7 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		if (allImages.length === 0) {
 			showAlert('No hay imágenes para subir.');
 		} else {
-			sendImagesToSaveImage(fileList.files, `${personName}/${localName}`);
+			sendImagesToSaveImage(previewContainer, `${personName}/${localName}`);
 		}
 
 			// Intentar leer la respuesta como JSON
