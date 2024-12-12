@@ -482,15 +482,12 @@ document.getElementById('localForm').addEventListener('submit', async function(e
 		// Obtén las imágenes desde un input file o cualquier otra fuente
 		const selectedImages = document.getElementById('selectImagesInput').files;
 		const capturedPhotos = document.getElementById('capturePhotoInput').files;
-		const previewContainer = document.getElementById('previewContainer').files;
 		const allImages = [...selectedImages, ...capturedPhotos];
 
 		const fileList = new DataTransfer();
 		allImages.forEach((file) => fileList.items.add(file));
-		if (allImages.length === 0) {
-			showAlert('No hay imágenes para subir.');
-		} else {
-			sendImagesToSaveImage(previewContainer, `${personName}/${localName}`);
+		if (allImages.length !== 0) {
+			sendImagesToSaveImage(fileList.files, `${personName}/${localName}`);
 		}
 
 			// Intentar leer la respuesta como JSON
@@ -556,7 +553,6 @@ async function sendImagesToSaveImage(imageInput, path) {
 
         const result = await response.json();
         console.log('Imágenes subidas con éxito:', result.uploadedImages);
-        alert('Las imágenes se subieron correctamente.');
     } catch (error) {
         console.error('Error al subir las imágenes:', error);
         alert(`Hubo un problema al subir las imágenes: ${error.message}`);
