@@ -138,13 +138,8 @@
           fetchFiles(currentPath);
         };
 
-        const downloadFolderButton = document.createElement('button');
-        downloadFolderButton.textContent = 'Download Folder';
-        downloadFolderButton.onclick = () => downloadFolder(currentPath.concat(folder.name).join('/'));
-
         fileItem.appendChild(folderName);
         fileItem.appendChild(enterButton);
-        fileItem.appendChild(downloadFolderButton);
         fileListElement.appendChild(fileItem);
       });
 
@@ -164,28 +159,6 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }
-
-    // Download a folder
-    async function downloadFolder(path) {
-      try {
-        const response = await fetch(`/api/download-folder?path=${path}`);
-        if (!response.ok) {
-          throw new Error(`Failed to download folder: ${response.statusText}`);
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${path}.zip`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error(error);
-        alert('Failed to download folder.');
-      }
     }
 
     // Initialize
