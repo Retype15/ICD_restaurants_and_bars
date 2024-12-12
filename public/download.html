@@ -46,6 +46,14 @@
     .file-item button:hover {
       background-color: #0056b3;
     }
+    .error-message {
+      text-align: center;
+      color: red;
+    }
+    .no-files {
+      text-align: center;
+      color: #555;
+    }
     .breadcrumb {
       margin-bottom: 20px;
       text-align: center;
@@ -93,7 +101,7 @@
       files.forEach(file => {
         const parts = file.name.split('/');
         if (parts.length > 1) {
-          const folderName = parts[0];
+          const folderName = parts.slice(0, -1).join('/');
           folders[folderName] = folders[folderName] || { type: 'folder', name: folderName };
         } else {
           const fileItem = document.createElement('div');
