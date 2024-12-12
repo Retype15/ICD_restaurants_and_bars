@@ -10,20 +10,22 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom right, #ffa07a, #fff5ee);
+            background: linear-gradient(to bottom, #ff7e5f, #feb47b);
             color: #333;
         }
         header {
-            background-color: #ff4500;
+            background: linear-gradient(to right, #ff512f, #dd2476);
             color: white;
             padding: 20px 10px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-bottom: 5px solid #ff4500;
         }
         header h1 {
             margin: 0;
             font-size: 2.5rem;
             text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         nav {
             margin-top: 15px;
@@ -37,20 +39,20 @@
             color: white;
             font-weight: 700;
             padding: 10px 20px;
-            background-color: #ff6347;
+            background: linear-gradient(to bottom, #ff512f, #f09819);
             border-radius: 12px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             font-size: 1rem;
         }
         nav a:hover {
-            background-color: #ff7f50;
-            transform: translateY(-3px);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
         main {
             padding: 20px;
             text-align: center;
-            background-color: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             margin: 10px;
             border-radius: 15px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -59,6 +61,7 @@
             font-size: 2rem;
             margin-bottom: 20px;
             color: #ff4500;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         .description {
             display: flex;
@@ -69,10 +72,15 @@
             text-align: left;
         }
         .description div {
-            background-color: #fdf5e6;
+            background: linear-gradient(to right, #ffefba, #ffffff);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .description div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
         .description h3 {
             margin: 0 0 10px;
@@ -87,12 +95,13 @@
         footer {
             text-align: center;
             padding: 15px;
-            background-color: #ffe4b5;
+            background: linear-gradient(to bottom, #ffe4b5, #f5deb3);
             border-top: 2px solid #ddd;
             position: fixed;
             bottom: 0;
             width: 100%;
             font-size: 0.9rem;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
         }
         footer p {
             margin: 0;
