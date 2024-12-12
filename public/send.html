@@ -116,26 +116,42 @@
       const formData = new FormData();
       formData.append('path', path);
 
+      // Si se selecciona un archivo, usar ese archivo; de lo contrario, usar el texto JSON ingresado
       if (fileInput.files.length > 0) {
-        formData.append('file', fileInput.files[0], `${path}/${archiveName}`);
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const jsonText = reader.result;
+          const data = { json_text: jsonText, archive_name: `${path}/${archiveName}` };
+          await uploadJson(data);
+        };
+        reader.readAsText(file);
       } else {
-        const blob = new Blob([jsonText.value], { type: 'application/json' });
-        formData.append('file', blob, `${path}/${archiveName}.json`);
+        const jsonData = jsonText.value;
+        const data = { json_text: jsonData, archive_name: `${path}/${archiveName}.json` };
+        await uploadJson(data);
       }
 
-      Array.from(imageInput.files).forEach(file => {
+      // Subir las imágenes seleccionadas
+      Array.from(imageInput.files).forEach(async file => {
         const extension = file.name.split('.').pop(); // Extraer la extensión del archivo
-        formData.append('images', file, `${path}/${archiveName}_${Date.now()}.${extension}`);
+        const fileName = `${path}/${archiveName}_${Date.now()}.${extension}`;
+        await uploadImage(fileName, file);
       });
+    });
 
+    async function uploadJson(data) {
       try {
         // Usamos window.location.origin para obtener la URL base
-        const apiUrl = `${window.location.origin}/api/save-file`;
+        const apiUrl = `${window.location.origin}/api/save-json`;
 
         // Enviamos los datos al servidor usando la URL base detectada
         const response = await fetch(apiUrl, {
           method: 'POST',
-          body: formData
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
         });
 
         // Intentar leer la respuesta como JSON
@@ -146,8 +162,8 @@
           if (response.ok) {
             responseDiv.innerHTML = `
               <h3>Éxito</h3>
-              <p>El archivo se ha subido correctamente.</p>
-              ${result.uploadedImages ? `<p>Imágenes subidas:</p>${result.uploadedImages.map(image => `<p><a href="${image.url}" target="_blank">${image.savedName}</a></p>`).join('')}` : ''}
+              <p>El archivo JSON se ha subido correctamente.</p>
+              <p>URL del Blob: <a href="${result.blob.url}" target="_blank">${result.blob.url}</a></p>
             `;
           } else {
             responseDiv.innerHTML = `
@@ -169,8 +185,55 @@
           <p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
         `;
       }
-    });
+    }
 
+    async function uploadImage(fileName, file) {
+      const formData = new FormData();
+      formData.append('path', fileName);
+      formData.append('file', file);
+
+      try {
+        // Usamos window.location.origin para obtener la URL base
+        const apiUrl = `${window.location.origin}/api/save-image`;
+
+        // Enviamos los datos al servidor usando la URL base detectada
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        // Intentar leer la respuesta como JSON
+        const textResponse = await response.text(); // Leer la respuesta como texto
+
+        try {
+          const result = JSON.parse(textResponse); // Intentar analizar la respuesta como JSON
+          if (response.ok) {
+            responseDiv.innerHTML += `
+              <h3>Éxito</h3>
+              <p>La imagen se ha subido correctamente.</p>
+              <p>URL del Blob: <a href="${result.uploadedImages[0].url}" target="_blank">${result.uploadedImages[0].url}</a></p>
+            `;
+          } else {
+            responseDiv.innerHTML += `
+              <h3>Error</h3>
+              <p>${result.error}</p>
+            `;
+          }
+        } catch (error) {
+          // Si la respuesta no es JSON válido, mostramos el texto para depuración
+          responseDiv.innerHTML += `
+            <h3>Error al procesar la respuesta</h3>
+            <p>No se pudo analizar la respuesta como JSON.</p>
+            <p>Respuesta del servidor: ${textResponse}</p>
+          `;
+        }
+      } catch (error) {
+        responseDiv.innerHTML += `
+          <h3>Error</h3>
+          <p>No se pudo conectar al servidor. Intenta de nuevo más tarde.</p>
+        `;
+      }
+    }
   </script>
 
 </body>
