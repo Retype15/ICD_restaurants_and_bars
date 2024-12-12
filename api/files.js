@@ -28,7 +28,7 @@ export async function GET(req, res) {
     archive.pipe(passThroughStream);
     passThroughStream.pipe(res);
 
-    blobs.forEach(blob => {
+    for (const blob of blobs) {
       const request = fetch(blob.downloadUrl)
         .then(response => response.buffer())
         .then(buffer => {
@@ -38,7 +38,7 @@ export async function GET(req, res) {
           console.error(`Error fetching blob ${blob.pathname}:`, error);
           throw error;
         });
-    });
+    }
 
     archive.finalize();
   } catch (error) {
