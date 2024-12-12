@@ -1,20 +1,27 @@
 import { list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req) {
   try {
-    const response = await list(); // Fetch the list of blobs
+    // Obtener el parámetro de la ruta de la carpeta actual
+    const currentPath = req.nextUrl.searchParams.get('path') || '';
 
-    // Validate the response structure
+    const response = await list({ prefix: currentPath }); // Fetch the list of blobs
+
+    // Validar la estructura de la respuesta
     if (!response || !Array.isArray(response.blobs)) {
       throw new Error('Invalid response from Blob Store: Missing or invalid "blobs" property');
     }
 
-    // Map the blobs to extract name and URL
-    const files = response.blobs.map(blob => ({
-      name: blob.pathname, // Blob name
-      url: blob.downloadUrl, // Public URL for downloading the blob
-    }));
+    // Mapear los blobs para extraer nombre, URL y tipo (archivo o carpeta)
+    const files = response.blobs.map(blob => {
+      const isFolder = blob.pathname.endsWith('/');
+      return {
+        name: isFolder ? blob.pathname.replace(currentPath, '').replace('/', '') : blob.pathname.split('/').pop(),
+        url: isFolder ? null : blob.downloadUrl,
+        type: isFolder ? 'folder' : 'file',
+      };
+    });
 
     return NextResponse.json(files); // Return JSON response with the files
   } catch (error) {
