@@ -97,32 +97,49 @@
       fileListElement.innerHTML = '';
       breadcrumbElement.innerHTML = path.length === 0 ? 'Home' : `Home / ${path.join(' / ')}`;
 
-      if (files.length === 0) {
-        fileListElement.innerHTML = '<p class="no-files">No files available for download.</p>';
-        return;
-      }
-
+      const folders = {};
       files.forEach(file => {
-        const fileItem = document.createElement('div');
-        fileItem.className = 'file-item';
-
-        const fileName = document.createElement('span');
-        fileName.textContent = file.name;
-
-        if (file.type === 'folder') {
-          fileName.style.cursor = 'pointer';
-          fileName.onclick = () => {
-            currentPath.push(file.name);
-            fetchFiles(currentPath);
-          };
+        const parts = file.name.split('/');
+        if (parts.length > 1) {
+          const folderName = parts[0];
+          folders[folderName] = folders[folderName] || { type: 'folder', name: folderName, url: null };
         } else {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+
+          const fileName = document.createElement('span');
+          fileName.textContent = file.name;
+
           const downloadButton = document.createElement('button');
           downloadButton.textContent = 'Download';
           downloadButton.onclick = () => downloadFile(file.url);
+          fileItem.appendChild(fileName);
           fileItem.appendChild(downloadButton);
+          fileListElement.appendChild(fileItem);
         }
+      });
 
-        fileItem.appendChild(fileName);
+      Object.values(folders).forEach(folder => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+
+        const folderName = document.createElement('span');
+        folderName.textContent = folder.name;
+        folderName.style.cursor = 'pointer';
+        folderName.onclick = () => {
+          currentPath.push(folder.name);
+          fetchFiles(currentPath);
+        };
+
+        const enterButton = document.createElement('button');
+        enterButton.textContent = 'Enter';
+        enterButton.onclick = () => {
+          currentPath.push(folder.name);
+          fetchFiles(currentPath);
+        };
+
+        fileItem.appendChild(folderName);
+        fileItem.appendChild(enterButton);
         fileListElement.appendChild(fileItem);
       });
 
