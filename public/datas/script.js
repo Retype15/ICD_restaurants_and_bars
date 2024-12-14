@@ -88,7 +88,7 @@ async function handleSubmit() {
   };
 
   try {
-	showModal('Su solicitud esta siendo procesada... por favor espere.', 'prossesing')
+	showModal('Su solicitud esta siendo procesada... puede irse a tomar un café mientras espera...', 'prossesing')
     const response = await fetch('/api/convert_json.js', {
       method: 'POST',
       headers: {
