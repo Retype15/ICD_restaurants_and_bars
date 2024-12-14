@@ -2,6 +2,7 @@ import { list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { put } from '@vercel/blob';
+const path = require('path');
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -95,8 +96,10 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
       
     
         // Subir el archivo procesado a Blob Store
-        const processedFileName = `${file.pathname}`;
-        const processedFilePath = `Clientes/${userName}/${processedFileName}`;
+		const filePath = file.pathname;
+		const fileName = path.basename(filePath);
+		const directoryName = path.dirname(filePath).split(path.sep).pop();
+        const processedFilePath = `Clientes/${userName}/${directoryName}/${fileName}`;
         await uploadToBlobStore(result, processedFilePath);
     
         logStream.push(`Archivo procesado exitosamente: ${file.pathname}`);
