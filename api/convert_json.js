@@ -53,10 +53,10 @@ async function processJsonWithAI(model, fileContent) {
       throw new Error("El contenido del archivo está vacío después de la conversión a cadena.");
     }
 
-    console.log('File string:', ...fileString);
+    //console.log('File string:', ...fileString);
 
     // Llamar al modelo AI
-    const result = await model.generateContent([...fileString]);
+    const result = await model.generateContent(["perrito casero a 600 tipo maravilla",fileString]);
 
     // Procesar la respuesta del modelo
     const response = await result.response;
@@ -64,7 +64,7 @@ async function processJsonWithAI(model, fileContent) {
 
     // Leer la respuesta como texto
     const responseText = await response.text();
-    console.log('Response text:', responseText);
+    //console.log('Response text:', responseText);
 
     // Intentar analizar la respuesta como JSON
     let processedData = responseText;
