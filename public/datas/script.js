@@ -101,10 +101,10 @@ async function handleSubmit() {
     if (data.error) {
       showModal('Hubo un error: ' + data.error, 'error');
     } else {
-      showModal('Solicitud enviada con éxito: ' + data.message, 'success');
+      showModal('Solicitud enviada con éxito: ' + data, 'success');
     }
   } catch (error) {
-    showModal('Error al enviar la solicitud: ' + error.message, 'error');
+    showModal('Error al enviar la solicitud: ' + error, 'error');
   }
 
   // Limpiar el formulario

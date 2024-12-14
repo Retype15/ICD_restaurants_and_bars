@@ -1,5 +1,5 @@
 import { list } from '@vercel/blob';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 
 export async function GET() {
   try {

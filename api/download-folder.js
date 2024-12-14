@@ -1,6 +1,6 @@
 import { list } from '@vercel/blob';
 import archiver from 'archiver';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 import { PassThrough } from 'stream';
 
 export async function GET(req) {

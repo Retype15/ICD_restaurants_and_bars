@@ -1,5 +1,5 @@
 import { list, put } from '@vercel/blob';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 const path = require('path');
 
