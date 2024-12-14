@@ -41,26 +41,48 @@ async function readFile(url) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-	let fileString = fileContent;
-	while (typeof fileString !== "string") { 
-		fileString = JSON.stringify(fileString);
-	};
-	//const stringed = JSON.stringify(fileContent);
-	//const stringed2 = JSON.stringify(stringed)
-	console.log(fileString);
-    const result = await model.generateContent(fileString);
-    const response = await result.response;
-	console.log(response);
-	
-    const processedData = await response.text();
-	console.log(processedData);
+    // Convertir fileContent a cadena si no lo es ya
+    let fileString = fileContent;
+    while (typeof fileString !== "string") { 
+      fileString = JSON.stringify(fileString); // Formatear con sangrías para legibilidad
+    }
 
+    // Verificar que fileString no esté vacío
+    if (!fileString || fileString.trim() === "") {
+      console.log("El contenido del archivo está vacío después de la conversión a cadena.");		
+      throw new Error("El contenido del archivo está vacío después de la conversión a cadena.");
+    }
+
+    console.log('File string:', fileString);
+
+    // Llamar al modelo AI
+    const result = await model.generateContent(fileString);
+
+    // Procesar la respuesta del modelo
+    const response = await result.response;
+    console.log(response);
+
+    // Leer la respuesta como texto
+    const responseText = await response.text();
+    console.log('Response text:', responseText);
+
+    // Intentar analizar la respuesta como JSON
+    let processedData;
+    try {
+      processedData = JSON.parse(responseText);
+    } catch (jsonError) {
+      console.error(`Error al analizar JSON: ${jsonError.message}`);
+      throw new Error(`La respuesta del modelo no es un JSON válido: ${responseText}`);
+    }
+
+    console.log('Processed data:', processedData);
     return processedData;
   } catch (error) {
-	console.log(`Error al procesar el JSON con AI: ${error.message}`);
+    console.log(`Error al procesar el JSON con AI: ${error.message}`);
     throw new Error(`Error al procesar el JSON con AI: ${error.message}`);
   }
 }
+
 
 // Función para subir el archivo procesado al Blob Store
 async function uploadToBlobStore(jsonData, archiveName) {
