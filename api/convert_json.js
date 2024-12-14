@@ -37,7 +37,7 @@ async function readFile(url) {
     if (!response.ok) {
       throw new Error(`Error al obtener el archivo: ${url}`);
     }
-    return await response.text();
+    return await response.json();
   } catch (error) {
     throw new Error(`Error al leer el archivo: ${error.message}`);
   }
@@ -46,7 +46,8 @@ async function readFile(url) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-    const result = await model.generateContent([fileContent]);
+	const stringed = JSON.stringify(fileContent)
+    const result = await model.generateContent([stringed]);
 
     const response = await result.response;
     const processedData = await response.text();
@@ -71,20 +72,14 @@ async function uploadToBlobStore(jsonData, archiveName) {
 export async function processFiles( responseSchema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
-  let objetoJSON = {}
-  try {
-	objetoJSON = JSON.parse(responseSchema);
-  } catch (error) {
-	objetoJSON = responseSchema;
-	console.log('Error de conversión:', error.message);
-	}
+
 	try{
-		generationConfig.responseSchema = objetoJSON;
-	}catch {
-	console.log('Error de conversión:', error.message);
-  }
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
-  
+		generationConfig.responseSchema = responseSchema;
+		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
+  	}catch (error){
+	console.log('Error de metida:', error.message);
+	throw new Error( `Error ocurrido al generar GenAi: ${error}`)
+	}
   try {
     const files = await listFiles(selectedRoute);
   
@@ -135,6 +130,7 @@ export async function POST(req) {
         if (!responseSchema || !selectedRoute || !userName) {
             return NextResponse.json({ error: 'Faltan parámetros en la solicitud' }, { status: 400 });
         }
+		console.log(`Json: ${responseSchema}\n selected Route: ${selectedRoute} \n user name: ${userName}`)
         
         const processResult = await processFiles( responseSchema, userName, selectedRoute);
         

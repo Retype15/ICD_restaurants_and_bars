@@ -82,7 +82,7 @@ async function handleSubmit() {
 
   // Enviar los datos al servidor
   const requestBody = {
-    responseSchema: jsonInput,
+    responseSchema: JSON.parse(jsonInput),
     selectedRoute,
     userName
   };
