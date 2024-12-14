@@ -37,7 +37,7 @@ async function readFile(url) {
     if (!response.ok) {
       throw new Error(`Error al obtener el archivo: ${url}`);
     }
-    return await response.json();
+    return await response.text();
   } catch (error) {
     throw new Error(`Error al leer el archivo: ${error.message}`);
   }
@@ -78,9 +78,11 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 	objetoJSON = responseSchema;
 	console.log('Error de conversión:', error.message);
 	}
-  
-  generationConfig.responseSchema = objetoJSON;
-  
+	try{
+		generationConfig.responseSchema = objetoJSON;
+	}catch {
+	console.log('Error de conversión:', error.message);
+  }
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
   
   try {
@@ -94,7 +96,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
       try {
         // Leer el archivo
         const fileContent = await readFile(file.url);
-    
+		console.log(fileContent);
         // Procesar el JSON con el modelo de AI
         const result = await processJsonWithAI(model, fileContent);
       
