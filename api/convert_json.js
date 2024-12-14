@@ -71,11 +71,12 @@ async function uploadToBlobStore(jsonData, archiveName) {
 export async function processFiles( responseSchema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
+  let objetoJSON = {}
   try {
-	const objetoJSON = JSON.parse(responseSchema);
+	objetoJSON = JSON.parse(responseSchema);
   } catch (error) {
 	objetoJSON = responseSchema;
-	console.error('Error de conversión:', error.message); return null;
+	console.log('Error de conversión:', error.message);
 	}
   
   generationConfig.responseSchema = objetoJSON;
