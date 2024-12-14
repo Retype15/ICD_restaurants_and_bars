@@ -44,7 +44,7 @@ async function processJsonWithAI(model, fileContent) {
     // Convertir fileContent a cadena si no lo es ya
     let fileString = fileContent;
     while (typeof fileString !== "string") { 
-      fileString = JSON.stringify(fileString); // Formatear con sangrías para legibilidad
+      fileString = String((fileString); // Formatear con sangrías para legibilidad
     }
 
     // Verificar que fileString no esté vacío
@@ -56,7 +56,7 @@ async function processJsonWithAI(model, fileContent) {
     //console.log('File string:', ...fileString);
 
     // Llamar al modelo AI
-    const result = await model.generateContent(["perrito casero a 600 tipo maravilla",fileString]);
+    const result = await model.generateContent(fileString);
 
     // Procesar la respuesta del modelo
     const response = await result.response;
