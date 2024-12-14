@@ -15,7 +15,15 @@
       <textarea id="jsonInput" placeholder="Escribe o sube un archivo JSON aquí..."></textarea>
       <input type="file" id="jsonFileInput" accept=".json" />
     </div>
-	<label>Si aun no lo has hecho el AI_Json, puedes hacerlo <a href="../get_json_format.html">aqui</a>. </label>
+    
+    <!-- Campo de nombre de usuario obligatorio -->
+    <div class="user-name">
+      <label for="userName">Nombre de Usuario:</label>
+      <input type="text" id="userName" placeholder="Introduce tu nombre" required />
+    </div>
+    
+    <label>Si aún no has hecho el AI_Json, puedes hacerlo <a href="../get_json_format.html">aquí</a>.</label>
+    
     <!-- Selector de rutas -->
     <div class="route-selector">
       <label for="routeSelect">Selecciona una ruta:</label>
@@ -24,9 +32,17 @@
       </select>
     </div>
 
-    <!-- Botón de envío (vacío por ahora) -->
+    <!-- Botón de envío -->
     <div class="submit-button">
       <button id="submitButton">Enviar Solicitud</button>
+    </div>
+  </div>
+
+  <!-- Modal de mensaje -->
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <p id="modalMessage">Mensaje...</p>
     </div>
   </div>
 

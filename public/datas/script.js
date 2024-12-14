@@ -8,9 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Manejar el envío del formulario
   document.getElementById('submitButton').addEventListener('click', handleSubmit);
+  
+  // Evento para cerrar el modal
+  document.querySelector('.close-btn').addEventListener('click', closeModal);
 });
 
-// Función para obtener las rutas desde el servidor
+// Función para obtener las rutas desde la API
 async function fetchRoutes() {
   try {
     const response = await fetch('/api/files');
@@ -21,16 +24,20 @@ async function fetchRoutes() {
       return;
     }
 
-    // Obtener los nombres de las carpetas principales
-    const folders = files.map(file => file.name.split('/')[0]);
-    const uniqueFolders = [...new Set(folders)];
+    // Filtrar las rutas que están dentro de la carpeta 'Convertidos'
+    const folders = files.filter(file => file.name.startsWith('Convertidos/'))
+                          .map(file => file.name.split('/')[1]);  // Extraer solo la subcarpeta dentro de Convertidos
+
+    const uniqueFolders = [...new Set(folders)]; // Eliminar duplicados
 
     // Rellenar el selector con las rutas
     const routeSelect = document.getElementById('routeSelect');
     routeSelect.innerHTML = ''; // Limpiar opciones
+    routeSelect.innerHTML = '<option value="">Selecciona una ruta...</option>';  // Opción por defecto
+
     uniqueFolders.forEach(folder => {
       const option = document.createElement('option');
-      option.value = folder;
+      option.value = 'Convertidos/' + folder;  // Agregar el prefijo "Convertidos/"
       option.textContent = folder;
       routeSelect.appendChild(option);
     });
@@ -61,41 +68,69 @@ function handleTextInput(event) {
 async function handleSubmit() {
   const jsonInput = document.getElementById('jsonInput').value;
   const selectedRoute = document.getElementById('routeSelect').value;
-  const userName = document.getElementById('userName').value; // Asegúrate de tener este campo en el formulario
+  const userName = document.getElementById('userName').value;
 
   if (!jsonInput || !selectedRoute || !userName) {
-    alert('Por favor, completa todos los campos');
+    showModal('Por favor, completa todos los campos', 'error');
     return;
   }
 
+  // Aquí puedes hacer la solicitud al servidor
+  console.log('Enviando JSON:', jsonInput);
+  console.log('Ruta seleccionada:', selectedRoute);
+  console.log('Nombre de usuario:', userName);
+
+  // Enviar los datos al servidor
+  const requestBody = {
+    responseSchema: JSON.parse(jsonInput),
+    selectedRoute,
+    userName
+  };
+
   try {
-    // Enviar la solicitud al servidor
     const response = await fetch('/api/convert_json.js', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        responseSchema: JSON.parse(jsonInput), // Convierte el JSON de entrada a un objeto
-        selectedRoute: selectedRoute,
-        userName: userName,
-      }),
+      body: JSON.stringify(requestBody)
     });
 
-    const result = await response.json();
-
-    if (result.error) {
-      alert('Error: ' + result.error);
+    const data = await response.json();
+    if (data.error) {
+      showModal('Hubo un error: ' + data.error, 'error');
     } else {
-      alert('Proceso completado exitosamente');
+      showModal('Solicitud enviada con éxito: ' + data.message, 'success');
     }
   } catch (error) {
-    console.error('Error al enviar la solicitud:', error);
-    alert('Hubo un problema al procesar la solicitud.');
+    showModal('Error al enviar la solicitud: ' + error.message, 'error');
   }
 
-  // Limpia el formulario
+  // Limpiar el formulario
   document.getElementById('jsonInput').value = '';
   document.getElementById('routeSelect').value = '';
   document.getElementById('userName').value = '';
+}
+
+// Función para mostrar el modal con el mensaje
+function showModal(message, type) {
+  const modal = document.getElementById('messageModal');
+  const modalMessage = document.getElementById('modalMessage');
+  
+  modalMessage.textContent = message;
+
+  // Cambiar el color del mensaje según el tipo
+  if (type === 'error') {
+    modalMessage.style.color = 'red';
+  } else {
+    modalMessage.style.color = 'green';
+  }
+
+  modal.style.display = 'block';
+}
+
+// Función para cerrar el modal
+function closeModal() {
+  const modal = document.getElementById('messageModal');
+  modal.style.display = 'none';
 }
