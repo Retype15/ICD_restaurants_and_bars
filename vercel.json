@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/download", "destination": "/download.html" }
+    { "source": "/dashboard", "destination": "/dashboard" }
   ],
   "functions": {
     "api/convert_json.js": {
