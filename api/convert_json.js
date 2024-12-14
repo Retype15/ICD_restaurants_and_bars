@@ -89,7 +89,7 @@ async function uploadToBlobStore(jsonData, archiveName) {
   try {
 	const jsonString = JSON.stringify(jsonData);
 	console.log(archiveName)
-    const blob = await put(archiveName, jsonString, { access: 'public', contentType: 'application/json'});
+    const blob = await put(archiveName, jsonData, { access: 'public', contentType: 'application/json'});
     return blob;
   } catch (error) {
     throw new Error(`Error al subir el archivo al Blob Store: ${error.message}`);
@@ -97,17 +97,17 @@ async function uploadToBlobStore(jsonData, archiveName) {
 }
 
 // Función para procesar los archivos de la ruta seleccionada
-export async function processFiles( responseSchema, userName, selectedRoute) {
+export async function processFiles( response_schema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
 	
 	const generationConfig = {
-		temperature: 0.9,
-		topP: 0.1,
-		topK: 16,
+		temperature: 1,
+		topP: 0.95,
+		topK: 40,
 		maxOutputTokens: 8192,
+		responseSchema: response_schema,
 		responseMimeType: "application/json",
-		responseSchema: responseSchema,
 	};
 	let model;
 	try{
