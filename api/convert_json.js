@@ -39,7 +39,7 @@ async function readFile(url) {
 }
 
 // Función para procesar el JSON con el modelo de AI
-async function processJsonWithAI(model, fileContent) {
+async function processJsonWithAI(model, fileContent, generationConfig) {
   try {
     // Convertir fileContent a cadena si no lo es ya
     let fileString = fileContent;
@@ -56,7 +56,7 @@ async function processJsonWithAI(model, fileContent) {
     console.log('File string:', fileString);
 
     // Llamar al modelo AI
-    const result = await model.generateContent(fileString);
+    const result = await model.generateContent(fileString, generationConfig);
 
     // Procesar la respuesta del modelo
     const response = await result.response;
@@ -101,16 +101,16 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
   const logStream = [];
 	
 	const generationConfig = {
-		temperature: 1,
-		topP: 0.95,
-		topK: 40,
+		temperature: 0.9,
+		topP: 0.1,
+		topK: 16,
 		maxOutputTokens: 8192,
 		responseMimeType: "application/json",
 		responseSchema: responseSchema,
 	};
 	let model;
 	try{
-		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
+		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp"});
 	}catch{
       throw new Error('Error en el json escrito, por favor rectificalo.');
 	}
@@ -129,7 +129,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 		//console.log(fileContent);
         // Procesar el JSON con el modelo de AI
 		console.log("Hasta antes del envio todo bien...")
-        const result = await processJsonWithAI(model, fileContent);
+        const result = await processJsonWithAI(model, fileContent, generationConfig);
 		console.log("Hasta DESPUES del envio todo bien...")
       
     
