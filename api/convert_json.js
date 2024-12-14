@@ -37,7 +37,7 @@ async function readFile(url) {
 async function processJsonWithAI(model, fileContent) {
   try {
 	const stringed = JSON.stringify(fileContent)
-    const result = await model.generateContent([stringed]);
+    const result = await model.generateContent("Hoy se compro mandarinas a 300 cada una y mamey a 250, comimos espagueti luego de eso y costo 1400");
 
     const response = await result.response;
     const processedData = await response.text();

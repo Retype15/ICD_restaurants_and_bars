@@ -107,9 +107,9 @@ async function handleSubmit() {
   }
 
   // Limpiar el formulario
-  document.getElementById('jsonInput').value = '';
-  document.getElementById('routeSelect').value = '';
-  document.getElementById('userName').value = '';
+  //document.getElementById('jsonInput').value = '';
+  //document.getElementById('routeSelect').value = '';
+  //document.getElementById('userName').value = '';
 }
 
 // Función para mostrar el modal con el mensaje
