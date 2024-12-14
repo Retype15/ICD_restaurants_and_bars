@@ -89,7 +89,7 @@ async function uploadToBlobStore(jsonData, archiveName) {
   try {
 	const jsonString = JSON.stringify(jsonData);
 	console.log(archiveName)
-    const blob = await put(archiveName, jsonData, { access: 'public', contentType: 'application/json'});
+    const blob = await put(archiveName, jsonString, { access: 'public', contentType: 'application/json'});
     return blob;
   } catch (error) {
     throw new Error(`Error al subir el archivo al Blob Store: ${error.message}`);
