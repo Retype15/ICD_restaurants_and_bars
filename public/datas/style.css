@@ -1,6 +1,8 @@
+/* Estilos generales */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212; /* Fondo oscuro */
+  color: #e0e0e0; /* Texto claro */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,93 +11,131 @@ body {
 }
 
 .container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #1e1e1e; /* Fondo oscuro para el contenedor */
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Sombra elegante */
   width: 100%;
-  max-width: 500px;
+  max-width: 550px;
 }
 
+/* Títulos */
 h1 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 26px;
+  color: #ffffff; /* Texto blanco */
+  margin-bottom: 25px;
+  border-bottom: 2px solid #4caf50; /* Línea decorativa */
+  padding-bottom: 10px;
 }
 
+/* Estilo para la sección de carga de JSON */
 .json-upload {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
 
 #jsonInput {
   width: 100%;
-  height: 200px;
-  padding: 10px;
-  font-family: monospace;
+  height: 180px;
+  padding: 12px;
+  font-family: 'Roboto Mono', monospace; /* Fuente de código */
   font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  background-color: #2a2a2a; /* Fondo del área de texto */
+  color: #ffffff; /* Texto claro */
+  resize: none; /* Deshabilitar el redimensionado */
 }
 
 #jsonFileInput {
-  padding: 10px;
+  padding: 12px;
+  background-color: #2a2a2a; /* Fondo del input */
+  color: #e0e0e0;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
 }
 
+/* Selector de rutas */
 .route-selector {
   margin-top: 20px;
 }
 
 #routeSelect {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  outline: none; /* Eliminar el borde azul al seleccionar */
+  appearance: none; /* Ocultar íconos predeterminados */
 }
 
+#routeSelect:hover {
+  border-color: #81c784; /* Verde más claro al pasar el cursor */
+}
+
+/* Campo de nombre */
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+/* Botón de envío */
 .submit-button {
   margin-top: 20px;
   text-align: center;
 }
 
 #submitButton {
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 16px;
-  background-color: #007BFF;
+  background-color: #4caf50; /* Verde vibrante */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 #submitButton:hover {
-  background-color: #0056b3;
+  background-color: #81c784; /* Verde claro al pasar el cursor */
 }
 
 /* Estilo del modal */
 .modal {
   display: none; /* Por defecto está oculto */
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro */
-  padding-top: 60px;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo negro translúcido */
   text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-content {
-  background-color: #fff;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  background-color: #1e1e1e; /* Fondo oscuro */
+  margin: auto;
+  padding: 25px;
+  border: 1px solid #4caf50; /* Borde verde */
+  border-radius: 10px;
+  width: 90%;
   max-width: 400px;
+  color: #e0e0e0; /* Texto claro */
   position: relative;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* Sombra elegante */
 }
 
 .close-btn {
@@ -105,46 +145,66 @@ h1 {
   position: absolute;
   top: 10px;
   right: 20px;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-  color: black;
-  text-decoration: none;
   cursor: pointer;
 }
 
-/* Estilo para el formulario */
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
+.close-btn:hover {
+  color: #fff;
 }
 
-.json-upload {
-  margin-bottom: 20px;
-}
-
-.route-selector,
-.submit-button {
-  margin-bottom: 20px;
-}
-
-textarea, input[type="text"], select, button {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  cursor: pointer;
-}
-
+/* Hover para botones */
 button:hover {
-  background-color: #45a049;
+  transform: scale(1.02);
+  background-color: #66bb6a;
+}
+
+/* Mejoras para dispositivos móviles */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  #jsonInput {
+    height: 150px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+}
+
+
+/* Estilo para el input de archivo */
+.file-input {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.file-label {
+  background-color: #4caf50;
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.file-label:hover {
+  background-color: #81c784; /* Verde claro al pasar el cursor */
+}
+
+#jsonFileInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }

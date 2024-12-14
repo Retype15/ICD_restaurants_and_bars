@@ -12,8 +12,15 @@
 
     <!-- Sección de entrada de JSON -->
     <div class="json-upload">
-      <textarea id="jsonInput" placeholder="Escribe o sube un archivo JSON aquí..."></textarea>
-      <input type="file" id="jsonFileInput" accept=".json" />
+      <textarea id="jsonInput" placeholder="Escribe o pega aquí tu contenido JSON..."></textarea>
+      
+      <!-- Botón estilizado para subir archivos -->
+      <div class="file-input">
+        <label for="jsonFileInput" class="file-label">
+          <span>Seleccionar archivo JSON</span>
+        </label>
+        <input type="file" id="jsonFileInput" accept=".json" />
+      </div>
     </div>
     
     <!-- Campo de nombre de usuario obligatorio -->
@@ -22,7 +29,8 @@
       <input type="text" id="userName" placeholder="Introduce tu nombre" required />
     </div>
     
-    <label>Si aún no has hecho el AI_Json, puedes hacerlo <a href="../get_json_format.html">aquí</a>.</label>
+    <!-- Enlace para el formato de AI_JSON -->
+    <label>Si aún no has generado el AI_JSON, puedes hacerlo <a href="../get_json_format.html">aquí</a>.</label>
     
     <!-- Selector de rutas -->
     <div class="route-selector">
