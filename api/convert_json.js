@@ -6,16 +6,6 @@ import { put } from '@vercel/blob';
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
-const generationConfig = {
-  temperature: 1,
-  topP: 0.95,
-  topK: 40,
-  maxOutputTokens: 8192,
-  responseMimeType: "application/json",
-  responseSchema: {},
-};
-
-
 // Función para obtener la lista de archivos de la ruta seleccionada
 async function listFiles(selectedRoute) {
   try {
@@ -72,17 +62,20 @@ async function uploadToBlobStore(jsonData, archiveName) {
 export async function processFiles( responseSchema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
-
-	try{
-		generationConfig.responseSchema = responseSchema;
-  	}catch (error){
+	
+	const generationConfig = {
+		temperature: 1,
+		topP: 0.95,
+		topK: 40,
+		maxOutputTokens: 8192,
+		responseMimeType: "application/json",
+		responseSchema: responseSchema,
+	};
+	
 	const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
-		
-	console.log('Error de metida:', error.message);
-	throw new Error( `Error ocurrido al generar GenAi: ${error}`)
-	}
-  try {
-    const files = await listFiles(selectedRoute);
+
+	try {
+		const files = await listFiles(selectedRoute);
   
     if (!files || files.length === 0) {
       throw new Error('No se encontraron archivos en la ruta seleccionada');
