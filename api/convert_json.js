@@ -34,36 +34,19 @@ async function readFile(url) {
   }
 }
 
-function transformNullsToEmptyObjects(obj) {
-  if (obj === null) {
-    return {}; // Reemplaza `null` por un objeto vacío
-  } else if (Array.isArray(obj)) {
-    return obj.map(item => transformNullsToEmptyObjects(item)); // Procesa cada elemento del array
-  } else if (typeof obj === 'object') {
-    const newObj = {};
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        newObj[key] = transformNullsToEmptyObjects(obj[key]); // Procesa recursivamente cada propiedad
-      }
-    }
-    return newObj;
-  } else {
-    return obj; // Devuelve el valor si no es un objeto ni `null`
+function replaceNulls(key, value) {
+  if (value === null) {
+    return ""; // Reemplaza `null` por una cadena vacía
   }
+  return value;
 }
-
-function ensureStringWithoutNulls(input) {
-  const transformedInput = transformNullsToEmptyObjects(input);
-  return JSON.stringify(transformedInput);
-}
-
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-	let fileString = ensureStringWithoutNulls(fileContent)
-	//while (typeof fileString !== "string") { 
-	//	fileString = JSON.stringify(fileString, replaceNullsWithEmptyObject).trim();
-	//}
+	let fileString = fileContent
+	while (typeof fileString !== "string") { 
+		fileString = JSON.stringify(fileString, replaceNulls);
+	}
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
 	console.log(fileString)
