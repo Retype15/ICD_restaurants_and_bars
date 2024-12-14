@@ -28,7 +28,7 @@ async function readFile(url) {
     if (!response.ok) {
       throw new Error(`Error al obtener el archivo: ${url}`);
     }
-    return await response.text();
+    return await response.json();
   } catch (error) {
     throw new Error(`Error al leer el archivo: ${error.message}`);
   }
@@ -37,15 +37,15 @@ async function readFile(url) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-	//const stringed = JSON.stringify(fileContent);
-	//const stringed2 = JSON.stringify(stringed)
-	//console.log(stringed2)
-    const result = await model.generateContent(fileContent + 'Extract all menus');
+	const stringed = JSON.stringify(fileContent);
+	const stringed2 = JSON.stringify(stringed)
+	console.log(stringed2)
+    const result = await model.generateContent(stringed2);
 
     const response = await result.response;
     const processedData = await response.text();
 
-    return JSON.parse(processedData);
+    return processedData;
   } catch (error) {
     throw new Error(`Error al procesar el JSON con AI: ${error.message}`);
   }
@@ -54,7 +54,7 @@ async function processJsonWithAI(model, fileContent) {
 // Función para subir el archivo procesado al Blob Store
 async function uploadToBlobStore(jsonData, archiveName) {
   try {
-    const blob = await put(archiveName, JSON.stringify(jsonData), { access: 'public' });
+    const blob = await put(archiveName, jsonData, { access: 'public' });
     return blob;
   } catch (error) {
     throw new Error(`Error al subir el archivo al Blob Store: ${error.message}`);
