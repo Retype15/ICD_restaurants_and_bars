@@ -51,9 +51,9 @@ async function processJsonWithAI(model, fileContent) {
     const result = await model.generateContent(fileString);
 
     const response = await result.response;
-	console.log(response.text());
+	console.log(response);
 	
-    const processedData = await response.json();
+    const processedData = await response.text();
 
     return processedData;
   } catch (error) {
