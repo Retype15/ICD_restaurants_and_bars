@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual JSON Constructor</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1 style="text-align: center;">Visual JSON Constructor</h1>
+        <div id="json-container" class="container"></div>
+        <button id="add-property-btn" class="add-property">Add Property</button>
+        <h2>Generated JSON</h2>
+        <textarea id="output" readonly></textarea>
+    </div>
+
+    <script>
+        let jsonStructure = {
+            type: "object",
+            properties: {},
+            required: []
+        };
+
+        const container = document.getElementById('json-container');
+        const output = document.getElementById('output');
+
+        function updateOutput() {
+            output.value = JSON.stringify(jsonStructure, null, 2);
+        }
+
+        function addProperty(parentKey = null) {
+            const key = `property_${Date.now()}`;
+            const newProperty = { type: "string" };
+
+            if (parentKey) {
+                const parent = findNestedProperty(jsonStructure.properties, parentKey);
+                if (parent.type === "object" && !parent.properties) {
+                    parent.properties = {};
+                }
+                parent.properties[key] = newProperty;
+            } else {
+                jsonStructure.properties[key] = newProperty;
+            }
+
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function findNestedProperty(properties, key) {
+            for (const [propKey, propValue] of Object.entries(properties)) {
+                if (propKey === key) return propValue;
+                if (propValue.properties) {
+                    const result = findNestedProperty(propValue.properties, key);
+                    if (result) return result;
+                }
+            }
+            return null;
+        }
+
+        function renderProperty(key, property, parent = container, level = 0) {
+            const propertyElement = document.createElement('div');
+            propertyElement.classList.add('property');
+            propertyElement.style.marginLeft = `${level * 20}px`;
+            propertyElement.dataset.key = key;
+
+            propertyElement.innerHTML = `
+                <input type="text" class="property-name" value="${key}" onchange="changeKey('${key}', this.value)" />
+                <select class="type-selector" onchange="changeType('${key}', this.value)">
+                    <option value="string" ${property.type === 'string' ? 'selected' : ''}>String</option>
+                    <option value="number" ${property.type === 'number' ? 'selected' : ''}>Number</option>
+                    <option value="integer" ${property.type === 'integer' ? 'selected' : ''}>Integer</option>
+                    <option value="boolean" ${property.type === 'boolean' ? 'selected' : ''}>Boolean</option>
+                    <option value="object" ${property.type === 'object' ? 'selected' : ''}>Object</option>
+                    <option value="array" ${property.type === 'array' ? 'selected' : ''}>Array</option>
+                    <option value="enum" ${property.type === 'enum' ? 'selected' : ''}>Enum</option>
+                </select>
+                <button onclick="toggleArray('${key}')">Is Array</button>
+                <button onclick="toggleRequired('${key}')">Required</button>
+                <button onclick="deleteProperty('${key}')">❌</button>
+            `;
+
+            if (property.type === "object" || property.type === "array") {
+                if (!property.properties && property.type === "object") {
+                    property.properties = {};
+                }
+
+                const nestedContainer = document.createElement('div');
+                nestedContainer.classList.add('nested');
+                nestedContainer.id = `properties-${key}`;
+
+                if (property.type === "array" && property.items) {
+                    renderProperty(key, property.items, nestedContainer, level + 1);
+                } else {
+                    for (const [subKey, subProperty] of Object.entries(property.properties || {})) {
+                        renderProperty(subKey, subProperty, nestedContainer, level + 1);
+                    }
+                }
+
+                propertyElement.appendChild(nestedContainer);
+
+                const addSubProperty = document.createElement('button');
+                addSubProperty.textContent = "Add Sub-property";
+                addSubProperty.onclick = () => addProperty(key);
+                propertyElement.appendChild(addSubProperty);
+            } else if (property.type === "enum") {
+                if (!property.enum) property.enum = [];
+                const enumContainer = document.createElement('div');
+                enumContainer.classList.add('nested');
+                enumContainer.id = `enum-${key}`;
+                enumContainer.style.marginLeft = `${(level + 1) * 20}px`;
+
+                property.enum.forEach(value => {
+                    const enumItem = document.createElement('div');
+                    enumItem.textContent = value;
+                    enumContainer.appendChild(enumItem);
+                });
+
+                const addEnumOption = document.createElement('button');
+                addEnumOption.textContent = "Add Enum Option";
+                addEnumOption.onclick = () => addEnumOptionToProperty(key);
+                propertyElement.appendChild(enumContainer);
+                propertyElement.appendChild(addEnumOption);
+            }
+
+            parent.appendChild(propertyElement);
+        }
+
+        function changeKey(oldKey, newKey) {
+            if (!newKey || jsonStructure.properties[newKey]) return;
+            const parentKey = findParentKey(jsonStructure.properties, oldKey);
+            const parent = parentKey ? findNestedProperty(jsonStructure.properties, parentKey) : jsonStructure;
+            parent.properties[newKey] = parent.properties[oldKey];
+            delete parent.properties[oldKey];
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function findParentKey(properties, key) {
+            for (const [propKey, propValue] of Object.entries(properties)) {
+                if (propValue.properties && propValue.properties[key]) return propKey;
+                if (propValue.properties) {
+                    const result = findParentKey(propValue.properties, key);
+                    if (result) return result;
+                }
+            }
+            return null;
+        }
+
+        function addEnumOptionToProperty(key) {
+            const parent = findNestedProperty(jsonStructure.properties, key);
+            const option = prompt("Enter enum option:");
+            if (!option) return;
+            parent.enum.push(option);
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function changeType(key, newType) {
+            const property = findNestedProperty(jsonStructure.properties, key);
+            property.type = newType;
+            if (newType === "object") {
+                property.properties = {};
+            } else if (newType === "array") {
+                property.items = { type: "string" };
+            } else if (newType === "enum") {
+                property.enum = [];
+            } else {
+                delete property.properties;
+                delete property.items;
+                delete property.enum;
+            }
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function toggleArray(key) {
+            const property = findNestedProperty(jsonStructure.properties, key);
+            if (property.type === "array") {
+                property.type = "string";
+                delete property.items;
+            } else {
+                property.type = "array";
+                property.items = { type: "string" };
+            }
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function toggleRequired(key) {
+            const index = jsonStructure.required.indexOf(key);
+            if (index === -1) {
+                jsonStructure.required.push(key);
+            } else {
+                jsonStructure.required.splice(index, 1);
+            }
+            updateOutput();
+        }
+
+        function deleteProperty(key) {
+            const parentKey = findParentKey(jsonStructure.properties, key);
+            const parent = parentKey ? findNestedProperty(jsonStructure.properties, parentKey) : jsonStructure;
+            delete parent.properties[key];
+            renderAllProperties();
+            updateOutput();
+        }
+
+        function renderAllProperties() {
+            container.innerHTML = '';
+            for (const [key, property] of Object.entries(jsonStructure.properties)) {
+                renderProperty(key, property);
+            }
+        }
+
+        document.getElementById('add-property-btn').addEventListener('click', () => addProperty());
+
+        updateOutput();
+    </script>
+</body>
+</html>
