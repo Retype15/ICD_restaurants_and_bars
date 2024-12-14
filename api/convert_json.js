@@ -85,13 +85,13 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 		maxOutputTokens: 8192,
 		responseMimeType: "application/json",
 		responseSchema: responseSchema,
-	};
+	};*/
 	let model;
 	try{
-		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
+		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 	}catch{
       throw new Error('Error en el json escrito, por favor rectificalo.');
-	}*/
+	}
 	
 	try {
 		const files = await listFiles(selectedRoute);
