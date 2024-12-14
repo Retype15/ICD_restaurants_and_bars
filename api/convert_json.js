@@ -37,10 +37,14 @@ async function readFile(url) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-	const stringed = JSON.stringify(fileContent);
+	let fileString = fileContent
+	while (typeof fileString !== "string") { 
+		fileString = JSON.stringify(fileString);
+	}
+	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
-	console.log(stringed)
-    const result = await model.generateContent(stringed);
+	console.log(fileString)
+    const result = await model.generateContent(fileString);
 
     const response = await result.response;
     const processedData = await response.text();
