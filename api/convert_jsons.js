@@ -43,7 +43,7 @@ async function processJsonWithAI(model, fileContent) {
     // Convertir fileContent a cadena si no lo es ya
     let fileString = fileContent;
     while (typeof fileString !== "string") { 
-      fileString = String((fileString); // Formatear con sangrías para legibilidad
+      fileString = String(fileString); // Formatear con sangrías para legibilidad
     }
 
     // Verificar que fileString no esté vacío
