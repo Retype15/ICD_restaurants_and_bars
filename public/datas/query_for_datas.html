@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Web Profesional</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Sube tu archivo JSON</h1>
+
+    <!-- Sección de entrada de JSON -->
+    <div class="json-upload">
+      <textarea id="jsonInput" placeholder="Escribe o sube un archivo JSON aquí..."></textarea>
+      <input type="file" id="jsonFileInput" accept=".json" />
+    </div>
+	<label>Si aun no lo has hecho el AI_Json, puedes hacerlo <a href="get_json_format.html">aqui</a>. </label>
+    <!-- Selector de rutas -->
+    <div class="route-selector">
+      <label for="routeSelect">Selecciona una ruta:</label>
+      <select id="routeSelect">
+        <option value="">Cargando rutas...</option>
+      </select>
+    </div>
+
+    <!-- Botón de envío (vacío por ahora) -->
+    <div class="submit-button">
+      <button id="submitButton">Enviar Solicitud</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -128,6 +128,11 @@
                 font-size: 0.9rem;
             }
         }
+		.estilo-h3 {
+		text-decoration: none; /* Elimina la línea */ 
+		font: inherit;
+		color: inherit;
+		}
     </style>
 </head>
 <body>
@@ -138,28 +143,33 @@
             <a href="download.html">Descargar DataSets</a>
             <a href="send.html">Subir Menús Manualmete</a>
             <a href="get_json_format.html">Crear json para la IA</a>
+            <a href="datas/query_for_datas.html">Solicitar mis Jsons</a>
         </nav>
     </header>
     <main>
         <h2>Explora tus opciones</h2>
         <div class="description">
-            <div>
+            <a href="menu.html" class="estilo-h3"><div>
                 <h3>Añadir Restaurantes/Bares</h3>
                 <p>Visita esta página para rellenar formularios detallados sobre restaurantes y bares. Comparte nombres, ubicaciones y especialidades para que otros los descubran.</p>
-            </div>
-            <div>
+            </div></a>
+            <a href="download.html" class="estilo-h3"><div>
                 <h3>Descargar Datos</h3>
                 <p>Consulta y descarga conjuntos de datos aportados por otros usuarios, organizados por municipios para un acceso fácil y rápido.</p>
-            </div>
-            <div>
+			</div></a>
+            <a href="send.html" class="estilo-h3"><div>
                 <h3>Subir Menús</h3>
                 <p>Sube archivos e imágenes de menús de manera manual para crear un recurso completo para los amantes de la gastronomía y negocios.</p>
-            </div>
-            <div>
-                <h3>Crear json para la IA</h3>
+            </div></a>
+            <a href="get_json_format.html" class="estilo-h3"><div>
+                <h3>Crear Json para la IA</h3>
                 <p>Permite crear el json necesario para convertir los datos al formato de tu json.</p>
-            </div>
-        </div>
+            </div></a>
+            <a href="datas/query_for_datas.html" class="estilo-h3"><div>
+                <h3>Solicitar mis Jsons</h3>
+                <p>Solicita el los datos convertidos a tu json.</p>
+            </div></a>
+        </div><br><br>
     </main>
     <footer>
         <p>&copy; 2024 Rety-On Corps. Todos los derechos reservados.</p>
