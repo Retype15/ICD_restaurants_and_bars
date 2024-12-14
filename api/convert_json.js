@@ -47,13 +47,13 @@ async function processJsonWithAI(model, fileContent) {
 	};
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
-	console.log(fileString);
+	//console.log(fileString);
     const result = await model.generateContent(fileString);
-
     const response = await result.response;
 	console.log(response);
 	
     const processedData = await response.text();
+	console.log(processedData);
 
     return processedData;
   } catch (error) {
@@ -104,7 +104,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
       try {
         // Leer el archivo
         const fileContent = await readFile(file.url);
-		console.log(fileContent);
+		//console.log(fileContent);
         // Procesar el JSON con el modelo de AI
 		console.log("Hasta antes del envio todo bien...")
         const result = await processJsonWithAI(model, JSON.stringify(responseSchema) + '\nExtract all values in the last json with these string, and return only the json file:\n' + fileContent);
