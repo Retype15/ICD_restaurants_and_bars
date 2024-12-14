@@ -56,7 +56,7 @@ async function processJsonWithAI(model, fileContent, generationConfig) {
     console.log('File string:', fileString);
 
     // Llamar al modelo AI
-    const result = await model.generateContent(fileString, generationConfig);
+    const result = await model.generateContent(fileString);
 
     // Procesar la respuesta del modelo
     const response = await result.response;
@@ -112,6 +112,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 	try{
 		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp"});
 	}catch{
+	  console.error('Error en el json escrito, por favor rectificalo.');
       throw new Error('Error en el json escrito, por favor rectificalo.');
 	}
 	
@@ -128,9 +129,9 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
         const fileContent = await readFile(file.url);
 		//console.log(fileContent);
         // Procesar el JSON con el modelo de AI
-		console.log("Hasta antes del envio todo bien...")
+		console.log("Hasta antes del envio todo bien...");
         const result = await processJsonWithAI(model, fileContent, generationConfig);
-		console.log("Hasta DESPUES del envio todo bien...")
+		console.log("Hasta DESPUES del envio todo bien...");
       
     
         // Subir el archivo procesado a Blob Store
