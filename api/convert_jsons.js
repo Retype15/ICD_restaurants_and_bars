@@ -1,7 +1,7 @@
 import { list, put } from '@vercel/blob';
 import { NextResponse } from 'next/server.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-const path = require('path');
+import path from 'path';
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
