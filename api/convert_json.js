@@ -84,7 +84,22 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 		topK: 40,
 		maxOutputTokens: 8192,
 		responseMimeType: "application/json",
-		responseSchema: responseSchema,
+		responseSchema: {
+			"type": "object",
+			"properties": {
+				"menus": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"menu_name": {"type": "string"},
+							"price": {"type": "integer"},
+							"menu_type": {"type": "string"}
+						}
+					}
+				}
+			}
+		},
 	};
 	let model;
 	try{
