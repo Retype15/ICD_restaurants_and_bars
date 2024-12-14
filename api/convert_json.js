@@ -71,7 +71,14 @@ async function uploadToBlobStore(jsonData, archiveName) {
 export async function processFiles( responseSchema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
-  generationConfig.responseSchema = JSON.stringify(responseSchema);
+  try {
+	const objetoJSON = JSON.parse(responseSchema);
+  } catch (error) {
+	objetoJSON = responseSchema;
+	console.error('Error de conversión:', error.message); return null;
+	}
+  
+  generationConfig.responseSchema = objetoJSON;
   
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
   
