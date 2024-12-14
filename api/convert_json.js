@@ -46,7 +46,7 @@ async function readFile(url) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-    const result = await model.generateContent(fileContent);
+    const result = await model.generateContent([fileContent]);
 
     const response = await result.response;
     const processedData = await response.text();
