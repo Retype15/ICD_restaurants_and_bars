@@ -26,26 +26,24 @@ async function readFile(url) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Error al obtener el archivo: ${url}`);
+      console.error(`Error al obtener el archivo: ${url} - Status: ${response.status}`);
+      throw new Error(`Error al obtener el archivo: ${url} - Status: ${response.status}`);
     }
-    return await response.json();
+    
+    const text = await response.text();
+    return text;
   } catch (error) {
+    console.error(`Error al leer el archivo: ${error.message}`);
     throw new Error(`Error al leer el archivo: ${error.message}`);
   }
 }
 
-function replaceNulls(key, value) {
-  if (value === null) {
-    return ""; // Reemplaza `null` por una cadena vacía
-  }
-  return value;
-}
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
 	let fileString = fileContent;
 	while (typeof fileString !== "string") { 
-		fileString = JSON.stringify(fileString, replaceNulls);
+		fileString = JSON.stringify(fileString);
 	};
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
@@ -55,10 +53,11 @@ async function processJsonWithAI(model, fileContent) {
     const response = await result.response;
 	console.log(response.text());
 	
-    const processedData = await response.text();
+    const processedData = await response.json();
 
     return processedData;
   } catch (error) {
+	console.log(`Error al procesar el JSON con AI: ${error.message}`);
     throw new Error(`Error al procesar el JSON con AI: ${error.message}`);
   }
 }
