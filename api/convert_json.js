@@ -78,35 +78,20 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
   const logFilePath = `Clientes/${userName}/process_log.txt`;
   const logStream = [];
 	
-	const generationConfig = {
+	/*const generationConfig = {
 		temperature: 1,
 		topP: 0.95,
 		topK: 40,
 		maxOutputTokens: 8192,
 		responseMimeType: "application/json",
-		responseSchema: {
-			"type": "object",
-			"properties": {
-				"menus": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"menu_name": {"type": "string"},
-							"price": {"type": "integer"},
-							"menu_type": {"type": "string"}
-						}
-					}
-				}
-			}
-		},
+		responseSchema: responseSchema,
 	};
 	let model;
 	try{
 		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
 	}catch{
       throw new Error('Error en el json escrito, por favor rectificalo.');
-	}
+	}*/
 	
 	try {
 		const files = await listFiles(selectedRoute);
@@ -122,7 +107,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 		console.log(fileContent);
         // Procesar el JSON con el modelo de AI
 		console.log("Hasta antes del envio todo bien...")
-        const result = await processJsonWithAI(model, fileContent);
+        const result = await processJsonWithAI(model, JSON.stringify(responseSchema) + '\nExtract all values in the last json with these string, and return only the json file:\n' + fileContent);
 		console.log("Hasta DESPUES del envio todo bien...")
       
     
