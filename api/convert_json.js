@@ -34,12 +34,18 @@ async function readFile(url) {
   }
 }
 
+function replaceNullsWithEmptyObject(key, value) {
+	if (value === null) {
+		return {}; // Reemplaza `null` por un objeto vacío 
+	} return value;
+}
+
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
 	let fileString = fileContent
 	while (typeof fileString !== "string") { 
-		fileString = JSON.stringify(fileString).trim();
+		fileString = JSON.stringify(fileString, replaceNullsWithEmptyObject).trim();
 	}
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
