@@ -75,8 +75,9 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 
 	try{
 		generationConfig.responseSchema = responseSchema;
-		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
   	}catch (error){
+	const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
+		
 	console.log('Error de metida:', error.message);
 	throw new Error( `Error ocurrido al generar GenAi: ${error}`)
 	}
