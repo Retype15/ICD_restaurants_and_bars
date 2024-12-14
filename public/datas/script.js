@@ -88,6 +88,7 @@ async function handleSubmit() {
   };
 
   try {
+	showModal('Su solicitud esta siendo procesada... por favor espere.', 'prossesing')
     const response = await fetch('/api/convert_json.js', {
       method: 'POST',
       headers: {
@@ -122,8 +123,10 @@ function showModal(message, type) {
   // Cambiar el color del mensaje según el tipo
   if (type === 'error') {
     modalMessage.style.color = 'red';
-  } else {
+  } else if type === 'success' {
     modalMessage.style.color = 'green';
+  } else {
+	  modalMessage.style.color = 'blue';
   }
 
   modal.style.display = 'block';
