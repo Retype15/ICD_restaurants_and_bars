@@ -39,12 +39,12 @@ async function processJsonWithAI(model, fileContent) {
   try {
 	let fileString = fileContent
 	while (typeof fileString !== "string") { 
-		fileString = JSON.stringify(fileString);
+		fileString = JSON.stringify(fileString).trim();
 	}
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
-	console.log([fileString])
-    const result = await model.generateContent([fileString]);
+	console.log(fileString)
+    const result = await model.generateContent(fileString);
 
     const response = await result.response;
 	console.log(response.text())
