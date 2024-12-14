@@ -1,7 +1,7 @@
 {
   "name": "icd_restaurants_and_bars",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
   "main": "index.html",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
