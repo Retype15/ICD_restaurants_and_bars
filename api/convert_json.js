@@ -43,17 +43,17 @@ function replaceNulls(key, value) {
 // Función para procesar el JSON con el modelo de AI
 async function processJsonWithAI(model, fileContent) {
   try {
-	let fileString = fileContent
+	let fileString = fileContent;
 	while (typeof fileString !== "string") { 
 		fileString = JSON.stringify(fileString, replaceNulls);
-	}
+	};
 	//const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
-	console.log(fileString)
+	console.log(fileString);
     const result = await model.generateContent(fileString);
 
     const response = await result.response;
-	console.log(response.text())
+	console.log(response.text());
 	
     const processedData = await response.text();
 
