@@ -56,18 +56,26 @@ async function processJsonWithAI(model, fileContent) {
     //console.log('File string:', ...fileString);
 
     // Llamar al modelo AI
-    const result = await model.generateContent(fileString);
+    const result = await model.generateContentStream(fileString);
+	
+	let text = '';
+	for await (const chunk of result.stream) {
+		const chunkText = chunk.text();
+		console.log(chunkText);
+		text += chunkText;
+	}
+	
+    //// Procesar la respuesta del modelo
+    //const response = await result.response;
+    //console.log(response);
 
-    // Procesar la respuesta del modelo
-    const response = await result.response;
-    console.log(response);
-
-    // Leer la respuesta como texto
-    const responseText = await response.text();
+    //// Leer la respuesta como texto
+    //const responseText = await response.text();
     //console.log('Response text:', responseText);
 
-    // Intentar analizar la respuesta como JSON
-    let processedData = responseText;
+    //// Intentar analizar la respuesta como JSON
+    //let processedData = responseText;
+    let processedData = text;
     try {
       processedData = JSON.parse(responseText);
     } catch (jsonError) {

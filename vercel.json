@@ -1,10 +1,5 @@
 {
   "rewrites": [
     { "source": "/dashboard", "destination": "/dashboard" }
-  ],
-  "functions": {
-    "api/convert_json.js": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }
