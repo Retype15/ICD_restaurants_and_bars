@@ -28,7 +28,7 @@ async function readFile(url) {
     if (!response.ok) {
       throw new Error(`Error al obtener el archivo: ${url}`);
     }
-    return await response.json();
+    return await response.text();
   } catch (error) {
     throw new Error(`Error al leer el archivo: ${error.message}`);
   }
