@@ -47,6 +47,8 @@ async function processJsonWithAI(model, fileContent) {
     const result = await model.generateContent(fileString);
 
     const response = await result.response;
+	console.log(response.text())
+	
     const processedData = await response.text();
 
     return processedData;
@@ -58,6 +60,7 @@ async function processJsonWithAI(model, fileContent) {
 // Función para subir el archivo procesado al Blob Store
 async function uploadToBlobStore(jsonData, archiveName) {
   try {
+	console.log(archiveName)
     const blob = await put(archiveName, jsonData, { access: 'public' });
     return blob;
   } catch (error) {
