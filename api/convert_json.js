@@ -39,7 +39,7 @@ async function processJsonWithAI(model, fileContent) {
   try {
 	const stringed = JSON.stringify(fileContent);
 	//const stringed2 = JSON.stringify(stringed)
-	console.log(stringed2)
+	console.log(stringed)
     const result = await model.generateContent(stringed);
 
     const response = await result.response;
