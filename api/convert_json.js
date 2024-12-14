@@ -37,8 +37,9 @@ async function readFile(url) {
 async function processJsonWithAI(model, fileContent) {
   try {
 	const stringed = JSON.stringify(fileContent);
-	console.log(stringed)
-    const result = await model.generateContent(stringed);
+	const stringed2 = JSON.stringify(stringed)
+	console.log(stringed2)
+    const result = await model.generateContent(stringed2);
 
     const response = await result.response;
     const processedData = await response.text();
@@ -95,7 +96,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
     
         // Subir el archivo procesado a Blob Store
         const processedFileName = `${file.pathname}`;
-        const processedFilePath = `Clientes/${userName}/${selectedRoute}/${processedFileName}`;
+        const processedFilePath = `Clientes/${userName}/${processedFileName}`;
         await uploadToBlobStore(result, processedFilePath);
     
         logStream.push(`Archivo procesado exitosamente: ${file.pathname}`);
