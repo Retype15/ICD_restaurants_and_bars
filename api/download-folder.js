@@ -16,8 +16,8 @@ export async function GET(req) {
 
     // Validate the response structure
     if (!response || !Array.isArray(response.blobs)) {
-		console.log("funciona hasta aqui...")
-		throw new Error('Invalid response from Blob Store: Missing or invalid "blobs" property');
+      console.log("funciona hasta aqui...");
+      throw new Error('Invalid response from Blob Store: Missing or invalid "blobs" property');
     }
 
     const blobs = response.blobs.filter(blob => blob.pathname.startsWith(path));
@@ -27,7 +27,7 @@ export async function GET(req) {
 
     const archive = archiver('zip');
     const passThroughStream = new PassThrough();
-	console.log("funciona hasta aqui...")
+    console.log("funciona hasta aqui...");
 
     // Set headers for the response
     const headers = new Headers();
@@ -36,7 +36,8 @@ export async function GET(req) {
 
     // Pipe the archive stream to the response stream
     archive.pipe(passThroughStream);
-	console.log("funciona hasta aqui...2")
+    console.log("funciona hasta aqui...2");
+
     // Add each blob to the archive
     for (const blob of blobs) {
       const fetchResponse = await fetch(blob.url);
