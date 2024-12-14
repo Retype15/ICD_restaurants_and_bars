@@ -74,9 +74,9 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
 		responseMimeType: "application/json",
 		responseSchema: responseSchema,
 	};
-	
+	let model;
 	try{
-		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
+		model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", generationConfig });
 	}catch{
       throw new Error('Error en el json escrito, por favor rectificalo.');
 	}
