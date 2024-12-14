@@ -60,7 +60,6 @@ async function processJsonWithAI(model, fileContent) {
 	let text = '';
 	for await (const chunk of result.stream) {
 		const chunkText = chunk.text();
-		console.log(chunkText);
 		text += chunkText;
 	}
 	
@@ -76,7 +75,7 @@ async function processJsonWithAI(model, fileContent) {
     //let processedData = responseText;
     let processedData = text;
     try {
-      processedData = JSON.parse(responseText);
+      processedData = JSON.parse(text);
     } catch (jsonError) {
       console.error(`Error al analizar JSON: ${jsonError.message}`);
       throw new Error(`La respuesta del modelo no es un JSON válido: ${responseText}`);
