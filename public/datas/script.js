@@ -123,7 +123,7 @@ function showModal(message, type) {
   // Cambiar el color del mensaje según el tipo
   if (type === 'error') {
     modalMessage.style.color = 'red';
-  } else if type === 'success' {
+  } else if (type === 'success') {
     modalMessage.style.color = 'green';
   } else {
 	  modalMessage.style.color = 'blue';
