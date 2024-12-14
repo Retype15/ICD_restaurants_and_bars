@@ -88,7 +88,7 @@ export async function processFiles( responseSchema, userName, selectedRoute) {
         const fileContent = await readFile(file.url);
     
         // Procesar el JSON con el modelo de AI
-        const result = await processJsonWithAI(model, fileContent);
+        const result = await processJsonWithAI(model, JSON.stringify(fileContent));
       
     
         // Subir el archivo procesado a Blob Store
