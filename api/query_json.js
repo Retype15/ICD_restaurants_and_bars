@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server.js';
-import { POST as saveJson } from './api/save-json.js';
 
 export async function POST(req) {
   try {
@@ -24,21 +23,31 @@ export async function POST(req) {
     // Configurar el nombre del archivo
     const archiveName = `users_query/${userName}.json`;
 
-    // Llamar al método para guardar el JSON como archivo
-    const saveResponse = await saveJson({
-      json_text: jsonContent,
-      archive_name: archiveName,
+    // Llamar al endpoint para guardar el archivo JSON
+    const response = await fetch('/api/save-json.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        json_text: jsonContent,
+        archive_name: archiveName,
+      }),
     });
 
-    // Manejar la respuesta de guardar el archivo
-    if (!saveResponse.success) {
+    // Validar la respuesta del fetch
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error('Error al guardar el archivo JSON:', errorResponse);
       return NextResponse.json(
-        { error: 'Error al guardar el archivo JSON' },
+        { error: 'Error al guardar el archivo JSON', details: errorResponse },
         { status: 500 }
       );
     }
 
-    // Continuar con el procesamiento si es necesario
+    const saveResponse = await response.json();
+
+    // Continuar con el procesamiento si el archivo se guarda exitosamente
     const processResult = await processFiles(responseSchema, userName, selectedRoute);
 
     return NextResponse.json({
