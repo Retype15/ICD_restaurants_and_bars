@@ -1,9 +1,12 @@
+import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server.js';
 
 export async function POST(req) {
   try {
+    // Leer los parámetros enviados en el cuerpo de la solicitud
     const { responseSchema, selectedRoute, userName } = await req.json();
 
+    // Validar los parámetros
     if (!responseSchema || !selectedRoute || !userName) {
       return NextResponse.json(
         { error: 'Faltan parámetros en la solicitud' },
@@ -11,9 +14,7 @@ export async function POST(req) {
       );
     }
 
-    console.log(`Json: ${responseSchema}\nselected Route: ${selectedRoute}\nuser name: ${userName}`);
-
-    // Crear el contenido del archivo JSON
+    // Crear el contenido del JSON
     const jsonContent = JSON.stringify({
       responseSchema,
       selectedRoute,
@@ -21,42 +22,23 @@ export async function POST(req) {
     });
 
     // Configurar el nombre del archivo
-    const archiveName = `users_query/${userName}.json`;
+    const archiveName = `_users_query/${userName}.json`;
 
-    // Llamar al endpoint para guardar el archivo JSON
-    const response = await fetch('/api/save-json.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        json_text: jsonContent,
-        archive_name: archiveName,
-      }),
+    // Subir el archivo al Blob Store
+    const blob = await put(archiveName, jsonContent, {
+      access: 'public', // Opcional: si quieres que sea accesible públicamente
     });
 
-    // Validar la respuesta del fetch
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      console.error('Error al guardar el archivo JSON:', errorResponse);
-      return NextResponse.json(
-        { error: 'Error al guardar el archivo JSON', details: errorResponse },
-        { status: 500 }
-      );
-    }
-
-    const saveResponse = await response.json();
-
-    // Continuar con el procesamiento si el archivo se guarda exitosamente
-    const processResult = await processFiles(responseSchema, userName, selectedRoute);
-
+    // Responder con éxito y datos del archivo guardado
     return NextResponse.json({
-      message: 'Archivo JSON guardado y procesado exitosamente',
-      processResult,
-      blob: saveResponse.blob,
+      success: true,
+      message: 'Archivo JSON guardado exitosamente',
+      blob,
     });
   } catch (error) {
     console.error('Error al procesar la solicitud:', error);
+
+    // Responder con error si ocurre algún problema
     return NextResponse.json(
       { error: 'Error al procesar la solicitud', details: error.message },
       { status: 500 }
