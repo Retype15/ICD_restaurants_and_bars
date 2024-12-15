@@ -101,7 +101,7 @@ async function handleSubmit() {
     if (data.error) {
       showModal('Hubo un error: ' + data.error, 'error');
     } else {
-      showModal('Solicitud enviada con éxito: ' + data, 'success');
+      showModal('Solicitud enviada con éxito!', 'success');
     }
   } catch (error) {
     showModal('Error al enviar la solicitud: ' + error, 'error');
