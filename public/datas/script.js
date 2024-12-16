@@ -1,3 +1,8 @@
+import { list, put } from '@vercel/blob';
+import { NextResponse } from 'next/server.js';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import path from 'path';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Cargar rutas desde la API
   fetchRoutes();
@@ -97,7 +102,7 @@ async function handleSubmit() {
       body: JSON.stringify(requestBody)
     });*/
 	
-	POST(requestBody);
+	send_query(requestBody);
 
     const data = await response.json();
     if (data.error) {
@@ -141,11 +146,6 @@ function closeModal() {
 }
 
 ///////////////////////////////////////////////////////////////////////
-
-import { list, put } from '@vercel/blob';
-import { NextResponse } from 'next/server.js';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import path from 'path';
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -313,7 +313,7 @@ export async function processFiles( response_schema, userName, selectedRoute) {
 
 
 
-async function POST(req) {
+async function send_query(req){
     try {
         const { responseSchema, selectedRoute, userName} = await req.json();
         
