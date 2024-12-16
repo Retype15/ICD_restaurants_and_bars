@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import path from 'path';
 
+
+const apiKey = process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(apiKey);
+
 document.addEventListener('DOMContentLoaded', () => {
   // Cargar rutas desde la API
   fetchRoutes();
@@ -102,6 +106,7 @@ async function handleSubmit() {
       body: JSON.stringify(requestBody)
     });*/
 	
+	showModal('hasta aqui todo bien','blue')
 	send_query(requestBody);
 
     const data = await response.json();
@@ -145,10 +150,10 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
-///////////////////////////////////////////////////////////////////////
+showModal("TOdo bien hasta aqui(antes de las nuevas funciones)",'blue')
 
-const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
+console.log("TOdo bien hasta aqui(antes de las nuevas funciones)")
+///////////////////////////////////////////////////////////////////////
 
 // Función para obtener la lista de archivos de la ruta seleccionada
 async function listFiles(selectedRoute) {
@@ -205,7 +210,7 @@ async function processJsonWithAI(model, fileContent) {
 	for await (const chunk of result.stream) {
 		const chunkText = chunk.text();
 		text += chunkText;
-		modalMessage.textContent = text;
+		showModal(text,'blue');
 	}
 	
     //// Procesar la respuesta del modelo
